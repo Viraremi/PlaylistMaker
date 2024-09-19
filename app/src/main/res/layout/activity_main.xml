@@ -17,7 +17,7 @@
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="@dimen/primary_text_size"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="@dimen/padding"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,24 +29,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:cornerRadius="16dp"
+            app:cornerRadius="@dimen/button_radius"
             android:layout_marginTop="@dimen/half_padding"
             android:backgroundTint="@color/white"
             android:gravity="center"
             android:text="@string/searsh"
             android:textColor="@color/black"
             android:textSize="@dimen/primary_text_size"
-            app:icon="@drawable/searsh"
+            app:icon="@drawable/search"
             app:iconTint="@color/black"
             app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"/>
+            app:iconPadding="@dimen/icon_padding"
+            android:letterSpacing="0"
+            android:textAllCaps="false"/>
 
         <Button
             android:id="@+id/button_library"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:cornerRadius="16dp"
+            app:cornerRadius="@dimen/button_radius"
             android:layout_marginTop="@dimen/half_padding"
             android:backgroundTint="@color/white"
             android:gravity="center"
@@ -56,14 +58,16 @@
             app:icon="@drawable/library"
             app:iconTint="@color/black"
             app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"/>
+            app:iconPadding="@dimen/icon_padding"
+            android:letterSpacing="0"
+            android:textAllCaps="false"/>
 
         <Button
             android:id="@+id/button_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:cornerRadius="16dp"
+            app:cornerRadius="@dimen/button_radius"
             android:layout_marginTop="@dimen/half_padding"
             android:backgroundTint="@color/white"
             android:gravity="center"
@@ -73,7 +77,9 @@
             app:icon="@drawable/settings"
             app:iconTint="@color/black"
             app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"/>
+            app:iconPadding="@dimen/icon_padding"
+            android:letterSpacing="0"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 

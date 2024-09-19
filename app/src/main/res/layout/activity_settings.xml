@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:paddingTop="@dimen/padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +18,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/arrowback"
-            android:padding="12dp"/>
+            android:padding="@dimen/primary_text_padding"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/settings"
             android:textSize="@dimen/primary_text_size"
-            android:padding="12dp"
+            android:padding="@dimen/primary_text_padding"
             android:textColor="@color/black"/>
 
     </LinearLayout>
@@ -32,7 +33,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding">
+        android:padding="@dimen/secondary_text_padding">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,69 +50,30 @@
 
     </FrameLayout>
 
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding">
+        android:padding="@dimen/secondary_text_padding"
+        app:drawableEndCompat="@drawable/share"
+        android:text="@string/share"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/share"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/share"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding">
+        android:padding="@dimen/secondary_text_padding"
+        app:drawableEndCompat="@drawable/support"
+        android:text="@string/support"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/support"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/support"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/user_agreement"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/arrowforward"/>
-
-    </FrameLayout>
-
-
-
+        android:padding="@dimen/secondary_text_padding"
+        app:drawableEndCompat="@drawable/arrowforward"
+        android:text="@string/user_agreement"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"/>
 </LinearLayout>
