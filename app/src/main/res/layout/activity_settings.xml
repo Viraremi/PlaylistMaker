@@ -48,6 +48,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/settings_btn_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -61,6 +62,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/settings_btn_support"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -74,6 +76,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/settings_btn_ua"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
