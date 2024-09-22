@@ -24,17 +24,13 @@
             android:text="@string/search" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginHorizontal="@dimen/padding"
         android:layout_marginVertical="@dimen/half_padding"
         android:background="@drawable/search_background">
-
-        <ImageView
-            style="@style/search_icon"
-            android:src="@drawable/search"/>
 
         <EditText
             style="@style/editText"
@@ -43,12 +39,16 @@
             android:hint="@string/search"
             android:maxLines="1"
             android:maxLength="50"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:padding="@dimen/half_padding"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="@dimen/half_padding"/>
 
         <ImageView
             style="@style/search_icon"
             android:id="@+id/search_clear"
             android:src="@drawable/close"
-            android:visibility="invisible"/>
-    </LinearLayout>
+            android:visibility="invisible"
+            android:layout_gravity="end"/>
+    </FrameLayout>
 </LinearLayout>

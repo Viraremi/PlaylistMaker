@@ -6,7 +6,7 @@
     <style name="secondary_background">
         <item name="android:background">@color/black</item>
     </style>
-    <style name="main_button">
+    <style name="main_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
@@ -50,8 +50,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:textColorHint">@color/black</item>
-        <item name="android:background">@color/light_gray</item>
+        <item name="android:background">@color/trans</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:drawableTint">@color/black</item>
 
     </style>
     <style name="sec_menu_header">
