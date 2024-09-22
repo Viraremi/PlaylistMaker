@@ -14,8 +14,13 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        val btn_back = findViewById<ImageView>(R.id.search_back)
         val btn_clear = findViewById<ImageView>(R.id.search_clear)
         val search_bar = findViewById<EditText>(R.id.search_bar)
+
+        btn_back.setOnClickListener{
+            finish()
+        }
 
         btn_clear.setOnClickListener{
             search_bar.setText("")
