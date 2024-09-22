@@ -51,6 +51,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:background">@color/light_gray</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="sec_menu_header">
         <item name="android:layout_width">match_parent</item>
