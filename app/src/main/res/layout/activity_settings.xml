@@ -2,11 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/settings_background"
+    style="@style/secondary_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/padding">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,19 +14,13 @@
         android:layout_marginBottom="24dp">
 
         <ImageView
-            style="@style/settings_button_icon"
+            style="@style/secondary_button_icon"
             android:id="@+id/button_settings_back"
             android:src="@drawable/arrowback"/>
 
         <TextView
-            style="@style/settings_background"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/settings"
-            android:textSize="@dimen/primary_text_size"
-            android:padding="@dimen/primary_text_padding"
-            android:fontFamily="@font/ys_display_medium"
-            android:textFontWeight="500"/>
+            style="@style/sec_menu_header"
+            android:text="@string/settings" />
     </LinearLayout>
 
     <FrameLayout
@@ -57,7 +50,7 @@
             android:text="@string/share"/>
 
         <ImageView
-            style="@style/settings_button_icon"
+            style="@style/secondary_button_icon"
             android:src="@drawable/share" />
     </FrameLayout>
 
@@ -71,7 +64,7 @@
             android:text="@string/support"/>
 
         <ImageView
-            style="@style/settings_button_icon"
+            style="@style/secondary_button_icon"
             android:src="@drawable/support" />
     </FrameLayout>
 
@@ -85,7 +78,7 @@
             android:text="@string/user_agreement"/>
 
         <ImageView
-            style="@style/settings_button_icon"
+            style="@style/secondary_button_icon"
             android:src="@drawable/arrowforward" />
     </FrameLayout>
 </LinearLayout>
