@@ -8,4 +8,5 @@
     <dimen name="primary_text_padding">12dp</dimen>
     <dimen name="secondary_text_padding">16dp</dimen>
     <dimen name="button_radius">16dp</dimen>
+    <dimen name="editText_radius">8dp</dimen>
 </resources>
