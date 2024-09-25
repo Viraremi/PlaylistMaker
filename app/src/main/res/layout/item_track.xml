@@ -18,8 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/half_padding"
-            android:src="@drawable/placeholder"
-            android:layout_marginVertical="@dimen/half_padding"/>
+            android:src="@drawable/placeholder"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
