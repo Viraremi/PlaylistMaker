@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
     private var searchTnstanceState = ""
@@ -45,6 +47,18 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         search_bar.addTextChangedListener(searchTextWatcher)
+
+        val trackList: ArrayList<Track> = ArrayList(arrayListOf(
+            Track("Smells Like Teen Spirit", "Nirvana", "5:01", getString(R.string.track_image_Nirvana)),
+            Track("Billie Jean", "Michael Jackson", "4:35", getString(R.string.track_image_MichaelJackson)),
+            Track("Stayin' Alive", "Bee Gees", "4:10", getString(R.string.track_image_BeeGees)),
+            Track("Whole Lotta Love", "Led Zeppelin", "5:33", getString(R.string.track_image_LedZeppelin)),
+            Track("Sweet Child O'Mine", "Guns N' Roses", "5:03", getString(R.string.track_image_GunsNRoses))
+        ))
+
+        val search_result = findViewById<RecyclerView>(R.id.search_result_recycler)
+        search_result.adapter = TrackAdapter(trackList)
+        search_result.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
