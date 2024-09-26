@@ -9,4 +9,7 @@
     <dimen name="secondary_text_padding">16dp</dimen>
     <dimen name="button_radius">16dp</dimen>
     <dimen name="editText_radius">8dp</dimen>
+    <dimen name="track_text_main">16sp</dimen>
+    <dimen name="track_text_second">11sp</dimen>
+    <dimen name="track_image_corner">2dp</dimen>
 </resources>

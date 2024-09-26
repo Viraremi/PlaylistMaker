@@ -51,4 +51,9 @@
             android:visibility="invisible"
             android:layout_gravity="end"/>
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_result_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

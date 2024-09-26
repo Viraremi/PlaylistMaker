@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/track_mainGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginHorizontal="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/track_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/half_padding"
+            android:src="@drawable/placeholder"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/track_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/track_text_main"
+                tools:text="nameTESTnameTEST" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:divider="@drawable/dot"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/track_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/track_text_second"
+                    tools:text="nameTEST"/>
+
+                <TextView
+                    android:id="@+id/track_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/track_text_second"
+                    tools:text="nameTEST"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        style="@style/secondary_button_icon"
+        android:src="@drawable/arrowforward"
+        android:layout_gravity="end|center"
+        android:padding="0dp"/>
+</FrameLayout>
