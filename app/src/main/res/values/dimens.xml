@@ -12,4 +12,8 @@
     <dimen name="track_text_main">16sp</dimen>
     <dimen name="track_text_second">11sp</dimen>
     <dimen name="track_image_corner">2dp</dimen>
+    <dimen name="search_err_text_size">19sp</dimen>
+    <dimen name="search_err_text_margin">24dp</dimen>
+    <dimen name="search_err_refresh_corner">54dp</dimen>
+    <dimen name="search_err_refresh_text_size">14sp</dimen>
 </resources>
