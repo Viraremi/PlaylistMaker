@@ -15,7 +15,9 @@
         android:orientation="horizontal">
 
         <ImageView
-            style="@style/secondary_button_icon"
+            style="@style/back_button_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/search_back"
             android:src="@drawable/arrowback"/>
 
@@ -42,7 +44,9 @@
             android:inputType="text"
             android:padding="@dimen/half_padding"
             android:drawableStart="@drawable/search"
-            android:drawablePadding="@dimen/half_padding"/>
+            android:drawablePadding="@dimen/half_padding"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             style="@style/search_icon"
@@ -51,6 +55,53 @@
             android:visibility="invisible"
             android:layout_gravity="end"/>
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/search_err_not_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/search_err_img_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/search_err_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_err_not_found"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/search_err_no_connect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/search_err_img_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/search_err_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_err_no_connection"/>
+
+        <Button
+            style="@style/search_err_refresh"
+            android:id="@+id/search_err_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_err_btn_refresh"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_result_recycler"

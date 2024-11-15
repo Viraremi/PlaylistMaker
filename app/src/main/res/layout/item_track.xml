@@ -31,7 +31,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/track_text_main"
-                tools:text="nameTESTnameTEST" />
+                tools:text="nameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTEST"
+                android:ellipsize="end"
+                android:layout_marginRight="30dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -45,14 +47,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/track_text_second"
-                    tools:text="nameTEST"/>
+                    tools:text="nameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTESTnameTEST" />
 
                 <TextView
                     android:id="@+id/track_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/track_text_second"
-                    tools:text="nameTEST"/>
+                    tools:text="TIMETIME"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
