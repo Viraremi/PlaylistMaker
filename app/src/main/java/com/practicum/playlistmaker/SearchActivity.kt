@@ -11,9 +11,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,16 +23,26 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+    companion object{
+        const val BASE_URL = "https://itunes.apple.com"
+        const val HISTORY = "search_history"
+    }
+
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var recyclerAdapter: TrackAdapter
     private var searchInstanceState = ""
     private var searchText = ""
-    private var searchResult = mutableListOf<Track>()
-    private val baseUrl = "https://itunes.apple.com"
+    private var adapterList = mutableListOf<Track>()
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val tracksAPI = retrofit.create(ITunesAPI::class.java)
-    private val adapter = TrackAdapter(searchResult)
+
+    override fun onStop() {
+        super.onStop()
+        searchHistory.save()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +54,13 @@ class SearchActivity : AppCompatActivity() {
         val err_btn_refrech = findViewById<Button>(R.id.search_err_refresh)
         val err_found = findViewById<LinearLayout>(R.id.search_err_not_found)
         val err_connect = findViewById<LinearLayout>(R.id.search_err_no_connect)
+        val history_header = findViewById<TextView>(R.id.search_history_header)
+        val btn_history_clear = findViewById<Button>(R.id.search_history_clear)
+
+        searchHistory = SearchHistory(getSharedPreferences(HISTORY, MODE_PRIVATE))
+        adapterList.addAll(searchHistory.history)
+        recyclerAdapter = TrackAdapter(adapterList) { track -> searchHistory.add(track) }
+        if (adapterList.isNotEmpty()) setHistoryVisibility(true, history_header, btn_history_clear)
 
         btn_back.setOnClickListener{
             finish()
@@ -51,12 +70,25 @@ class SearchActivity : AppCompatActivity() {
             search_bar.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(search_bar.windowToken, 0)
-            searchResult.clear()
-            adapter.notifyDataSetChanged()
+            adapterList.clear()
+            if (searchHistory.history.isNotEmpty()){
+                setHistoryVisibility(true, history_header, btn_history_clear)
+                err_found.visibility = View.GONE
+                err_connect.visibility = View.GONE
+                adapterList.addAll(searchHistory.history)
+            }
+            recyclerAdapter.notifyDataSetChanged()
         }
 
         err_btn_refrech.setOnClickListener{
             searchRequest(searchText,err_found, err_connect)
+        }
+
+        btn_history_clear.setOnClickListener{
+            searchHistory.clear()
+            adapterList.clear()
+            recyclerAdapter.notifyDataSetChanged()
+            setHistoryVisibility(false, history_header, btn_history_clear)
         }
 
         val searchTextWatcher = object : TextWatcher{
@@ -77,13 +109,14 @@ class SearchActivity : AppCompatActivity() {
         search_bar.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchRequest(searchText, err_found, err_connect)
+                setHistoryVisibility(false, history_header, btn_history_clear)
                 true
             }
             false
         }
 
         val searchRecycleView = findViewById<RecyclerView>(R.id.search_result_recycler)
-        searchRecycleView.adapter = adapter
+        searchRecycleView.adapter = recyclerAdapter
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
@@ -115,30 +148,41 @@ class SearchActivity : AppCompatActivity() {
                 val result = response.body()?.foundTracks
                 if (response.isSuccessful && result != null){
                     if (result.isEmpty()){
-                        searchResult.clear()
+                        adapterList.clear()
                         err_connect.visibility = View.GONE
                         err_found.visibility = View.VISIBLE
                     }
                     else {
                         err_found.visibility = View.GONE
                         err_connect.visibility = View.GONE
-                        searchResult.clear()
-                        searchResult.addAll(result)
-                        adapter.notifyDataSetChanged()
+                        adapterList.clear()
+                        adapterList.addAll(result)
+                        recyclerAdapter.notifyDataSetChanged()
                     }
                 }
                 else {
-                    searchResult.clear()
+                    adapterList.clear()
                     err_found.visibility = View.GONE
                     err_connect.visibility = View.VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<ResponseTracks>, t: Throwable) {
-                searchResult.clear()
+                adapterList.clear()
                 err_found.visibility = View.GONE
                 err_connect.visibility = View.VISIBLE
             }
         })
+    }
+
+    private fun setHistoryVisibility(visibility: Boolean, header: TextView, btn: Button){
+        if (visibility){
+            header.visibility = View.VISIBLE
+            btn.visibility = View.VISIBLE
+        }
+        else {
+            header.visibility = View.GONE
+            btn.visibility = View.GONE
+        }
     }
 }

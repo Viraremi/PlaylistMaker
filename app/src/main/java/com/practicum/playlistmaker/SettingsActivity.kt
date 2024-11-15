@@ -5,10 +5,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
+
+const val UI_THEME = "ui_theme"
+const val UI_THEME_KEY = "ui_theme_key"
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +24,7 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<FrameLayout>(R.id.settings_btn_share)
         val supportButton = findViewById<FrameLayout>(R.id.settings_btn_support)
         val uaButton = findViewById<FrameLayout>(R.id.settings_btn_ua)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -43,6 +45,15 @@ class SettingsActivity : AppCompatActivity() {
         uaButton.setOnClickListener{
             val uaIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.praktikum_offer)))
             startActivity((uaIntent))
+        }
+
+        val sharedPref = getSharedPreferences(UI_THEME, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPref.getBoolean(UI_THEME_KEY, false)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPref.edit()
+                .putBoolean(UI_THEME_KEY, checked)
+                .apply()
         }
     }
 }
