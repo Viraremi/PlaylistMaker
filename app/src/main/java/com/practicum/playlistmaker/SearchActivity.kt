@@ -123,7 +123,7 @@ class SearchActivity : AppCompatActivity() {
                         err_found.visibility = View.GONE
                         err_connect.visibility = View.GONE
                         searchResult.clear()
-                        searchResult.addAll(result.toMutableList())
+                        searchResult.addAll(result)
                         adapter.notifyDataSetChanged()
                     }
                 }
