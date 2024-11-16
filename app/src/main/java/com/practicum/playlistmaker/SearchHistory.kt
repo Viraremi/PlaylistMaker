@@ -5,21 +5,24 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class SearchHistory(
-    private val sharedPref: SharedPreferences
+    private val sharedPref: SharedPreferences,
+    private val gson: Gson
 ) {
-    var history = mutableListOf<Track>()
+    private var history = mutableListOf<Track>()
+    fun getHistory(): MutableList<Track> { return history }
+
     companion object{
-        const val TRACKS_KEY = "tracks"
-        const val MAX_SIZE = 8 //если установить значение больше, то кнопка очистки истории уйдет за экран... я не знаю как это поправить ._.
+        private const val TRACKS_KEY = "tracks"
+        private const val MAX_SIZE = 10
     }
 
     init{
         val json = sharedPref.getString(TRACKS_KEY, null)
-        history = Gson().fromJson(json, object : TypeToken<MutableList<Track>>() {}.type) ?: mutableListOf<Track>()
+        history = gson.fromJson(json, object : TypeToken<MutableList<Track>>() {}.type) ?: mutableListOf<Track>()
     }
 
-    fun save(){
-        val json = Gson().toJson(history)
+    private fun save(){
+        val json = gson.toJson(history)
         sharedPref.edit()
             .putString(TRACKS_KEY, json)
             .apply()
@@ -30,6 +33,7 @@ class SearchHistory(
         sharedPref.edit()
             .clear()
             .apply()
+        save()
     }
 
     fun add(track: Track){
@@ -40,5 +44,6 @@ class SearchHistory(
             history.removeLast()
         }
         history.add(0, track)
+        save()
     }
 }

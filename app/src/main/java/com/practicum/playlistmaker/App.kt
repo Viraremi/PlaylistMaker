@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
 
-    var darkTheme = true
+    private var darkTheme = true
 
     override fun onCreate() {
         super.onCreate()
