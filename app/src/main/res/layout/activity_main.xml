@@ -22,29 +22,21 @@
         android:textSize="@dimen/primary_text_size"
         android:layout_marginBottom="@dimen/padding"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <Button
+        style="@style/main_button"
+        android:id="@+id/button_search"
+        android:text="@string/search"
+        app:icon="@drawable/search"/>
 
-        <Button
-            style="@style/main_button"
-            android:id="@+id/button_search"
-            android:text="@string/search"
-            app:icon="@drawable/search"/>
+    <Button
+        style="@style/main_button"
+        android:id="@+id/button_library"
+        android:text="@string/library"
+        app:icon="@drawable/library"/>
 
-        <Button
-            style="@style/main_button"
-            android:id="@+id/button_library"
-            android:text="@string/library"
-            app:icon="@drawable/library"/>
-
-        <Button
-            style="@style/main_button"
-            android:id="@+id/button_settings"
-            android:text="@string/settings"
-            app:icon="@drawable/settings"/>
-
-    </LinearLayout>
-
+    <Button
+        style="@style/main_button"
+        android:id="@+id/button_settings"
+        android:text="@string/settings"
+        app:icon="@drawable/settings"/>
 </LinearLayout>
