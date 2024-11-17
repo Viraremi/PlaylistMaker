@@ -59,6 +59,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchHistory = SearchHistory(getSharedPreferences(HISTORY, MODE_PRIVATE), gson)
         historyAdapterList.addAll(searchHistory.getHistory())
+        if (searchHistory.getHistory().isEmpty()) historyLayout.visibility = View.GONE
 
         btn_back.setOnClickListener{
             finish()
@@ -79,6 +80,7 @@ class SearchActivity : AppCompatActivity() {
                 //При надобности можно будет вынести в отдельную функцию historyRefresh
                 historyLayout.visibility = View.VISIBLE
             }
+            else historyLayout.visibility = View.GONE
         }
 
         err_btn_refrech.setOnClickListener{
