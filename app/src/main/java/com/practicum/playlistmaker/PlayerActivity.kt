@@ -1,14 +1,11 @@
 package com.practicum.playlistmaker
 
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +31,7 @@ class PlayerActivity : AppCompatActivity() {
             .load(track.getCoverArtwork())
             .centerCrop()
             .placeholder(R.drawable.placeholder_big)
+            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.player_art_corner_radius)))
             .into(artView)
         trackNameView.text = track.trackName
         trackArtistView.text = track.artistName
