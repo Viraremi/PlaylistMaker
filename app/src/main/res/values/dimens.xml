@@ -16,4 +16,5 @@
     <dimen name="search_err_text_margin">24dp</dimen>
     <dimen name="search_err_refresh_corner">54dp</dimen>
     <dimen name="search_err_refresh_text_size">14sp</dimen>
+    <dimen name="player_art_corner_radius">8dp</dimen>
 </resources>

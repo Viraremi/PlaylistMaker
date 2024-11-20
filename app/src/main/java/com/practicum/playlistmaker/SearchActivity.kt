@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,11 +22,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.Serializable
 
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val BASE_URL = "https://itunes.apple.com"
         const val HISTORY = "search_history"
+        const val PLAYER_INTENT_KEY = "player_intent_key"
     }
 
     private lateinit var searchHistory: SearchHistory
@@ -131,11 +134,18 @@ class SearchActivity : AppCompatActivity() {
         }
         */
 
-        searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track -> searchHistory.add(track) }
+        searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
+            searchHistory.add(track)
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+        }
         searchRecycleView.adapter = searchResultsAdapter
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        historyAdapter = TrackAdapter(historyAdapterList) {}
+        historyAdapter = TrackAdapter(historyAdapterList) { track ->
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+        }
         historyAdapter.notifyDataSetChanged()
         historyRecyclerView.adapter = historyAdapter
         historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
