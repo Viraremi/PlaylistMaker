@@ -9,9 +9,8 @@ data class Track(
     val artistName: String, // Имя исполнителя
     val trackTimeMillis: String, // Продолжительность трека
     val artworkUrl100: String, // Ссылка на изображение обложки
-    val trackId: Int, // Уникальный id трека
     val collectionName: String, // Альбом
-    val releaseDate: Int, // Год релиза
+    val releaseDate: String, // Год релиза
     val primaryGenreName: String, // Жанр
     val country: String // Страна исполнителя
 ) : Serializable{

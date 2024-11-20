@@ -39,7 +39,7 @@ class PlayerActivity : AppCompatActivity() {
         trackArtistView.text = track.artistName
         infoTimeView.text = track.timeValidFormat()
         infoAlbumView.text = track.collectionName
-        infoYearView.text = track.releaseDate.toString()
+        infoYearView.text = track.releaseDate.substring(0, 4)
         infoGenreView.text = track.primaryGenreName
         infoCountryView.text = track.country
     }

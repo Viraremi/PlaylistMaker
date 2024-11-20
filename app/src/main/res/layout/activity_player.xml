@@ -39,7 +39,7 @@
     <ImageView
         android:id="@+id/player_art"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:src="@drawable/placeholder_big"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
