@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,7 +13,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -21,11 +25,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.Serializable
 
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val BASE_URL = "https://itunes.apple.com"
         const val HISTORY = "search_history"
+        const val PLAYER_INTENT_KEY = "player_intent_key"
     }
 
     private lateinit var searchHistory: SearchHistory
@@ -44,6 +50,14 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_search)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets((WindowInsetsCompat.Type.ime()))
+            val paddingBottom = if (ime.bottom > 0) { ime.bottom } else { systemBars.bottom }
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, paddingBottom)
+            insets
+        }
 
         val gson = Gson()
         val btn_back = findViewById<ImageView>(R.id.search_back)
@@ -131,11 +145,18 @@ class SearchActivity : AppCompatActivity() {
         }
         */
 
-        searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track -> searchHistory.add(track) }
+        searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
+            searchHistory.add(track)
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+        }
         searchRecycleView.adapter = searchResultsAdapter
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        historyAdapter = TrackAdapter(historyAdapterList) {}
+        historyAdapter = TrackAdapter(historyAdapterList) { track ->
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+        }
         historyAdapter.notifyDataSetChanged()
         historyRecyclerView.adapter = historyAdapter
         historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
