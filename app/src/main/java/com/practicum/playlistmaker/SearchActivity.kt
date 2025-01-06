@@ -53,7 +53,9 @@ class SearchActivity : AppCompatActivity() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_search)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val ime = insets.getInsets((WindowInsetsCompat.Type.ime()))
+            val paddingBottom = if (ime.bottom > 0) { ime.bottom } else { systemBars.bottom }
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, paddingBottom)
             insets
         }
 
