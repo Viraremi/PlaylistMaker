@@ -2,9 +2,7 @@ package com.practicum.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,6 +12,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val viewPadding = resources.getDimensionPixelSize(R.dimen.padding)
+            v.setPadding(
+                systemBars.left + viewPadding,
+                systemBars.top + viewPadding,
+                systemBars.right + viewPadding,
+                systemBars.bottom + viewPadding)
+            insets
+        }
 
         val button_search = findViewById<Button>(R.id.button_search)
         val button_library = findViewById<Button>(R.id.button_library)
