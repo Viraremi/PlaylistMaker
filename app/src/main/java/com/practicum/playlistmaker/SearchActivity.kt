@@ -8,12 +8,12 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
         const val HISTORY = "search_history"
         const val PLAYER_INTENT_KEY = "player_intent_key"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 1000L
     }
 
     private var isClickAllowed = true
@@ -51,6 +51,8 @@ class SearchActivity : AppCompatActivity() {
 
     lateinit var err_connect: LinearLayout
     lateinit var err_found: LinearLayout
+    lateinit var progressBar: ProgressBar
+    lateinit var searchRecycleView: RecyclerView
     private val searchRunnable = Runnable { searchRequest() }
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
@@ -86,13 +88,13 @@ class SearchActivity : AppCompatActivity() {
         val btn_back = findViewById<ImageView>(R.id.search_back)
         val btn_clear = findViewById<ImageView>(R.id.search_clear)
         val search_bar = findViewById<EditText>(R.id.search_bar)
-        val searchRecycleView = findViewById<RecyclerView>(R.id.search_result_recycler)
-        val err_btn_refrech = findViewById<Button>(R.id.search_err_refresh)
+        searchRecycleView = findViewById(R.id.search_result_recycler)
         err_found = findViewById(R.id.search_err_not_found)
         err_connect = findViewById(R.id.search_err_no_connect)
         val historyLayout = findViewById<ScrollView>(R.id.search_history)
         val btn_history_clear = findViewById<Button>(R.id.search_history_clear)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.search_history_recycler)
+        progressBar = findViewById(R.id.search_progress_bar)
 
         searchHistory = SearchHistory(getSharedPreferences(HISTORY, MODE_PRIVATE), gson)
         historyAdapterList.addAll(searchHistory.getHistory())
@@ -120,10 +122,6 @@ class SearchActivity : AppCompatActivity() {
             else historyLayout.visibility = View.GONE
         }
 
-//        err_btn_refrech.setOnClickListener{
-//            searchDebounce()
-//        }
-
         btn_history_clear.setOnClickListener{
             searchHistory.clear()
             historyAdapterList.clear()
@@ -148,26 +146,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         search_bar.addTextChangedListener(searchTextWatcher)
-//        search_bar.setOnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                historyLayout.visibility = View.GONE
-//                searchRecycleView.visibility = View.VISIBLE
-//                searchDebounce()
-//                true
-//            }
-//            false
-//        }
-
-        /*
-        Не совсем понял зачем нам тут отслеживать фокус, как это нам советует
-        подсказка в ТЗ на платформе. Для нашей задачи достаточно условия в
-        TextWatcher.onTextChanged, а при добавлении/удалении этого слушателя
-        поведение приложения не меняется
-
-        search_bar.setOnFocusChangeListener { _, hasFocus ->
-            historyLayout.visibility = if (hasFocus && search_bar.text.isEmpty()) View.VISIBLE else View.GONE
-        }
-        */
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
             if (clickDebounce()) {
@@ -210,38 +188,41 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchRequest(){
-        tracksAPI.getTrack(searchText).enqueue(object : Callback<ResponseTracks>{
-            override fun onResponse(
-                call: Call<ResponseTracks>,
-                response: Response<ResponseTracks>
-            ) {
-                val result = response.body()?.foundTracks
-                if (response.isSuccessful && result != null){
-                    if (result.isEmpty()){
+        if (searchText.isNotEmpty()) {
+            searchRecycleView.visibility = View.GONE
+            err_found.visibility = View.GONE
+            err_connect.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+
+            tracksAPI.getTrack(searchText).enqueue(object : Callback<ResponseTracks> {
+                override fun onResponse(
+                    call: Call<ResponseTracks>,
+                    response: Response<ResponseTracks>
+                ) {
+                    progressBar.visibility = View.GONE
+                    val result = response.body()?.foundTracks
+                    if (response.isSuccessful && result != null) {
+                        if (result.isEmpty()) {
+                            searchResultsAdapterList.clear()
+                            err_found.visibility = View.VISIBLE
+                        } else {
+                            searchResultsAdapterList.clear()
+                            searchResultsAdapterList.addAll(result)
+                            searchResultsAdapter.notifyDataSetChanged()
+                            searchRecycleView.visibility = View.VISIBLE
+                        }
+                    } else {
                         searchResultsAdapterList.clear()
-                        err_connect.visibility = View.GONE
-                        err_found.visibility = View.VISIBLE
-                    }
-                    else {
-                        err_found.visibility = View.GONE
-                        err_connect.visibility = View.GONE
-                        searchResultsAdapterList.clear()
-                        searchResultsAdapterList.addAll(result)
-                        searchResultsAdapter.notifyDataSetChanged()
+                        err_connect.visibility = View.VISIBLE
                     }
                 }
-                else {
+
+                override fun onFailure(call: Call<ResponseTracks>, t: Throwable) {
+                    progressBar.visibility = View.GONE
                     searchResultsAdapterList.clear()
-                    err_found.visibility = View.GONE
                     err_connect.visibility = View.VISIBLE
                 }
-            }
-
-            override fun onFailure(call: Call<ResponseTracks>, t: Throwable) {
-                searchResultsAdapterList.clear()
-                err_found.visibility = View.GONE
-                err_connect.visibility = View.VISIBLE
-            }
-        })
+            })
+        }
     }
 }
