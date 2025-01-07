@@ -137,6 +137,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchInstanceState = s.toString()
                 btn_clear.visibility = clearButtonVisibility(s)
+                err_found.visibility = View.GONE
+                err_connect.visibility = View.GONE
                 historyLayout.visibility = if (search_bar.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                 searchDebounce()
             }
