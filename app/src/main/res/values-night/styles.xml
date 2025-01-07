@@ -132,7 +132,8 @@
         <item name="android:src">@drawable/button_add_to_playlist_dark</item>
     </style>
     <style name="player_btn_play">
-        <item name="android:src">@drawable/button_play_dark</item>
+        <item name="tint">@color/white</item>
+        <item name="android:src">@drawable/button_play</item>
     </style>
     <style name="player_btn_like">
         <item name="android:src">@drawable/button_like_dark</item>
