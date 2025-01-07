@@ -1,8 +1,10 @@
 package com.practicum.playlistmaker
 
+import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.widget.Button
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.util.Date
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -19,11 +22,14 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+        private const val DELAY = 1000L
     }
 
     private var playerState = STATE_DEFAULT
     private lateinit var playBtn: ImageView
+    private lateinit var timer: TextView
     private var mediaPlayer = MediaPlayer()
+    private var handler: Handler? = null
 
     private fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
@@ -32,6 +38,8 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
+            playBtn.setImageResource(R.drawable.button_play)
+            timer.text = getString(R.string.player_timer_zero_zero)
             playerState = STATE_PREPARED
         }
     }
@@ -65,7 +73,10 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
+        handler = Handler(Looper.getMainLooper())
+
         playBtn = findViewById(R.id.player_btn_play)
+        timer = findViewById(R.id.player_current_time)
         val btnBack = findViewById<ImageView>(R.id.player_back)
         val artView = findViewById<ImageView>(R.id.player_art)
         val trackNameView = findViewById<TextView>(R.id.player_track_name)
@@ -98,16 +109,37 @@ class PlayerActivity : AppCompatActivity() {
 
         playBtn.setOnClickListener{
             playbackControl()
+            handler?.post(createUpdateTimerTask())
         }
     }
 
     override fun onPause() {
         super.onPause()
         pausePlayer()
+        handler?.removeCallbacksAndMessages(null)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        handler?.removeCallbacksAndMessages(null)
+    }
+
+    private fun createUpdateTimerTask(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                if (playerState == STATE_PLAYING) {
+                    val elapsedTime = mediaPlayer.getCurrentPosition()
+                    timer.text = getTime(elapsedTime.toLong())
+                    handler?.postDelayed(this, 1000L)
+                }
+            }
+        }
+    }
+
+    private fun getTime(stamp: Long): String {
+        val sdf = SimpleDateFormat("mm:ss")
+        val dataTime = Date(stamp)
+        return sdf.format(dataTime)
     }
 }
