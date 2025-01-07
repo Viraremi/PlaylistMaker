@@ -3,6 +3,8 @@ package com.practicum.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -32,6 +34,19 @@ class SearchActivity : AppCompatActivity() {
         const val BASE_URL = "https://itunes.apple.com"
         const val HISTORY = "search_history"
         const val PLAYER_INTENT_KEY = "player_intent_key"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+
+    }
+
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     private lateinit var searchHistory: SearchHistory
@@ -146,16 +161,20 @@ class SearchActivity : AppCompatActivity() {
         */
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
-            searchHistory.add(track)
-            val playerIntent = Intent(this, PlayerActivity::class.java)
-            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+            if (clickDebounce()) {
+                searchHistory.add(track)
+                val playerIntent = Intent(this, PlayerActivity::class.java)
+                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+            }
         }
         searchRecycleView.adapter = searchResultsAdapter
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
-            val playerIntent = Intent(this, PlayerActivity::class.java)
-            startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+            if (clickDebounce()) {
+                val playerIntent = Intent(this, PlayerActivity::class.java)
+                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+            }
         }
         historyAdapter.notifyDataSetChanged()
         historyRecyclerView.adapter = historyAdapter
