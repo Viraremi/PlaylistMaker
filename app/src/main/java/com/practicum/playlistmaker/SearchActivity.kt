@@ -35,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
         const val HISTORY = "search_history"
         const val PLAYER_INTENT_KEY = "player_intent_key"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private var isClickAllowed = true
@@ -47,6 +47,14 @@ class SearchActivity : AppCompatActivity() {
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
+    }
+
+    lateinit var err_connect: LinearLayout
+    lateinit var err_found: LinearLayout
+    private val searchRunnable = Runnable { searchRequest() }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private lateinit var searchHistory: SearchHistory
@@ -80,8 +88,8 @@ class SearchActivity : AppCompatActivity() {
         val search_bar = findViewById<EditText>(R.id.search_bar)
         val searchRecycleView = findViewById<RecyclerView>(R.id.search_result_recycler)
         val err_btn_refrech = findViewById<Button>(R.id.search_err_refresh)
-        val err_found = findViewById<LinearLayout>(R.id.search_err_not_found)
-        val err_connect = findViewById<LinearLayout>(R.id.search_err_no_connect)
+        err_found = findViewById(R.id.search_err_not_found)
+        err_connect = findViewById(R.id.search_err_no_connect)
         val historyLayout = findViewById<ScrollView>(R.id.search_history)
         val btn_history_clear = findViewById<Button>(R.id.search_history_clear)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.search_history_recycler)
@@ -112,9 +120,9 @@ class SearchActivity : AppCompatActivity() {
             else historyLayout.visibility = View.GONE
         }
 
-        err_btn_refrech.setOnClickListener{
-            searchRequest(searchText,err_found, err_connect)
-        }
+//        err_btn_refrech.setOnClickListener{
+//            searchDebounce()
+//        }
 
         btn_history_clear.setOnClickListener{
             searchHistory.clear()
@@ -132,6 +140,7 @@ class SearchActivity : AppCompatActivity() {
                 searchInstanceState = s.toString()
                 btn_clear.visibility = clearButtonVisibility(s)
                 historyLayout.visibility = if (search_bar.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -139,15 +148,15 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         search_bar.addTextChangedListener(searchTextWatcher)
-        search_bar.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                historyLayout.visibility = View.GONE
-                searchRecycleView.visibility = View.VISIBLE
-                searchRequest(searchText, err_found, err_connect)
-                true
-            }
-            false
-        }
+//        search_bar.setOnEditorActionListener { _, actionId, _ ->
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                historyLayout.visibility = View.GONE
+//                searchRecycleView.visibility = View.VISIBLE
+//                searchDebounce()
+//                true
+//            }
+//            false
+//        }
 
         /*
         Не совсем понял зачем нам тут отслеживать фокус, как это нам советует
@@ -200,8 +209,8 @@ class SearchActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.search_bar).setText(searchInstanceState)
     }
 
-    private fun searchRequest(text: String, err_found: LinearLayout, err_connect: LinearLayout){
-        tracksAPI.getTrack(text).enqueue(object : Callback<ResponseTracks>{
+    private fun searchRequest(){
+        tracksAPI.getTrack(searchText).enqueue(object : Callback<ResponseTracks>{
             override fun onResponse(
                 call: Call<ResponseTracks>,
                 response: Response<ResponseTracks>
