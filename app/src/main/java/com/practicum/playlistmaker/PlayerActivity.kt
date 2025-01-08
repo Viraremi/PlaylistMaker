@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.util.Date
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -130,16 +130,12 @@ class PlayerActivity : AppCompatActivity() {
             override fun run() {
                 if (playerState == STATE_PLAYING) {
                     val elapsedTime = mediaPlayer.getCurrentPosition()
-                    timer.text = getTime(elapsedTime.toLong())
-                    handler?.postDelayed(this, 1000L)
+                    timer.text = dateFormat.format(elapsedTime.toLong())
+                    handler?.postDelayed(this, DELAY)
                 }
             }
         }
     }
 
-    private fun getTime(stamp: Long): String {
-        val sdf = SimpleDateFormat("mm:ss")
-        val dataTime = Date(stamp)
-        return sdf.format(dataTime)
-    }
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 }
