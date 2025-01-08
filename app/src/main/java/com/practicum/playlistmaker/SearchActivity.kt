@@ -88,6 +88,7 @@ class SearchActivity : AppCompatActivity() {
         val btn_back = findViewById<ImageView>(R.id.search_back)
         val btn_clear = findViewById<ImageView>(R.id.search_clear)
         val search_bar = findViewById<EditText>(R.id.search_bar)
+        val err_btn_refrech = findViewById<Button>(R.id.search_err_refresh)
         searchRecycleView = findViewById(R.id.search_result_recycler)
         err_found = findViewById(R.id.search_err_not_found)
         err_connect = findViewById(R.id.search_err_no_connect)
@@ -102,6 +103,10 @@ class SearchActivity : AppCompatActivity() {
 
         btn_back.setOnClickListener{
             finish()
+        }
+
+        err_btn_refrech.setOnClickListener{
+            searchDebounce()
         }
 
         btn_clear.setOnClickListener{
