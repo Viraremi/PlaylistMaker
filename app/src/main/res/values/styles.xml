@@ -46,14 +46,9 @@
         <item name="android:tint">@color/black</item>
     </style>
     <style name="search_icon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">@dimen/half_padding</item>
         <item name="android:tint">@color/gray</item>
     </style>
     <style name="editText">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:background">@color/trans</item>
         <item name="android:textColor">@color/black</item>
