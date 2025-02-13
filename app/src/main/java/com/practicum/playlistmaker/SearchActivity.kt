@@ -201,22 +201,17 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchRequest(){
         if (searchText.isNotEmpty()) {
-            searchRecycleView.visibility = View.GONE
-            err_found.visibility = View.GONE
-            err_connect.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
-
+            showLoading()
             tracksAPI.getTrack(searchText).enqueue(object : Callback<ResponseTracks> {
                 override fun onResponse(
                     call: Call<ResponseTracks>,
                     response: Response<ResponseTracks>
                 ) {
-                    progressBar.visibility = View.GONE
                     val result = response.body()?.foundTracks
                     if (response.isSuccessful && result != null) {
                         if (result.isEmpty()) {
+                            showErrorEmptyReponse()
                             searchResultsAdapterList.clear()
-                            err_found.visibility = View.VISIBLE
                         } else {
                             searchResultsAdapterList.clear()
                             searchResultsAdapterList.addAll(result)
@@ -230,11 +225,27 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ResponseTracks>, t: Throwable) {
-                    progressBar.visibility = View.GONE
+                    showErrorConnection()
                     searchResultsAdapterList.clear()
-                    err_connect.visibility = View.VISIBLE
                 }
             })
         }
+    }
+
+    fun showErrorConnection(){
+        progressBar.visibility = View.GONE
+        err_connect.visibility = View.VISIBLE
+    }
+
+    fun showErrorEmptyReponse(){
+        progressBar.visibility = View.GONE
+        err_found.visibility = View.VISIBLE
+    }
+
+    fun showLoading(){
+        searchRecycleView.visibility = View.GONE
+        err_found.visibility = View.GONE
+        err_connect.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
     }
 }
