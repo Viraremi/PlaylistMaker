@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.domain
+package com.practicum.playlistmaker.domain.interactor
 
 import com.practicum.playlistmaker.domain.api.InteractorHistory
 import com.practicum.playlistmaker.domain.api.RepositoryHistory

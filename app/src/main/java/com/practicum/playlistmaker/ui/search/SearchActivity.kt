@@ -21,28 +21,26 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.practicum.playlistmaker.Creator
-import com.practicum.playlistmaker.data.repository.network.ITunesAPI
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.data.repository.network.ResponseTracks
+import com.practicum.playlistmaker.data.model.ResponseTracks
+import com.practicum.playlistmaker.domain.consumer.Consumer
+import com.practicum.playlistmaker.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.domain.model.Track
 import com.practicum.playlistmaker.ui.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.Serializable
 
 class SearchActivity : AppCompatActivity() {
     companion object{
-        const val BASE_URL = "https://itunes.apple.com"
-        const val HISTORY = "search_history"
         const val PLAYER_INTENT_KEY = "player_intent_key"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
+
+    private val getTracksUseCase = Creator.provideGetTracksUseCase()
 
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
@@ -71,11 +69,7 @@ class SearchActivity : AppCompatActivity() {
     private var searchText = ""
     private var searchResultsAdapterList = mutableListOf<Track>()
     private var historyAdapterList = mutableListOf<Track>()
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    val tracksAPI = retrofit.create(ITunesAPI::class.java)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +83,6 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val gson = Gson()
         val btn_back = findViewById<ImageView>(R.id.search_back)
         val btn_clear = findViewById<ImageView>(R.id.search_clear)
         val search_bar = findViewById<EditText>(R.id.search_bar)
@@ -205,35 +198,31 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchRequest(){
-        if (searchText.isNotEmpty()) {
-            showLoading()
-            tracksAPI.getTrack(searchText).enqueue(object : Callback<ResponseTracks> {
-                override fun onResponse(
-                    call: Call<ResponseTracks>,
-                    response: Response<ResponseTracks>
-                ) {
-                    val result = response.body()?.foundTracks
-                    if (response.isSuccessful && result != null) {
-                        if (result.isEmpty()) {
-                            showErrorEmptyReponse()
-                            searchResultsAdapterList.clear()
-                        } else {
-                            searchResultsAdapterList.clear()
-                            searchResultsAdapterList.addAll(result)
-                            searchResultsAdapter.notifyDataSetChanged()
-                            showResult()
+        handler.post{
+            if (searchText.isNotEmpty()) {
+                showLoading()
+                getTracksUseCase.execute(searchText, object : Consumer<List<Track>> {
+                    override fun consume(data: ConsumerData<List<Track>>) {
+                        when (data) {
+                            is ConsumerData.Data -> {
+                                if (data.value.isEmpty()){
+                                    showErrorEmptyReponse()
+                                    searchResultsAdapterList.clear()
+                                } else {
+                                    searchResultsAdapterList.clear()
+                                    searchResultsAdapterList.addAll(data.value)
+                                    searchResultsAdapter.notifyDataSetChanged()
+                                    showResult()
+                                }
+                            }
+                            is ConsumerData.Error -> {
+                                showErrorConnection()
+                                searchResultsAdapterList.clear()
+                            }
                         }
-                    } else {
-                        searchResultsAdapterList.clear()
-                        showErrorConnection()
                     }
-                }
-
-                override fun onFailure(call: Call<ResponseTracks>, t: Throwable) {
-                    showErrorConnection()
-                    searchResultsAdapterList.clear()
-                }
-            })
+                })
+            }
         }
     }
 

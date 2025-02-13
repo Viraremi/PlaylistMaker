@@ -1,5 +1,6 @@
-package com.practicum.playlistmaker.data.repository.network
+package com.practicum.playlistmaker.data.network
 
+import com.practicum.playlistmaker.data.model.ResponseTracks
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
