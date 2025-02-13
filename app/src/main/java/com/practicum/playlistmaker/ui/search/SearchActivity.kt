@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.ui
+package com.practicum.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -23,12 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlistmaker.Creator
-import com.practicum.playlistmaker.ITunesAPI
-import com.practicum.playlistmaker.PlayerActivity
+import com.practicum.playlistmaker.data.repository.network.ITunesAPI
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.ResponseTracks
+import com.practicum.playlistmaker.data.repository.network.ResponseTracks
 import com.practicum.playlistmaker.domain.model.Track
-import com.practicum.playlistmaker.TrackAdapter
+import com.practicum.playlistmaker.ui.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data.repository.network
 
 import com.google.gson.annotations.SerializedName
 import com.practicum.playlistmaker.domain.model.Track
