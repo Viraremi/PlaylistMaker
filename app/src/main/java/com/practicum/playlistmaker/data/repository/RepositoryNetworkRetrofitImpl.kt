@@ -14,7 +14,19 @@ class RepositoryNetworkRetrofitImpl(
         val tracksResponse = networkClient.getTracks(currency)
 
         return if (tracksResponse is ResponseTracks) {
-            val tracks = tracksResponse.foundTracks
+            val tracks = tracksResponse.foundTracks.map{
+                Track(
+                    it.trackName,
+                    it.artistName,
+                    it.trackTimeMillis,
+                    it.artworkUrl100,
+                    it.collectionName,
+                    it.releaseDate,
+                    it.primaryGenreName,
+                    it.country,
+                    it.previewUrl
+                )
+            }
             Resource.Success(tracks)
         } else {
             Resource.Error("Сетевая ошибка")
