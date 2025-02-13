@@ -5,7 +5,7 @@
     android:id="@+id/main_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity"
+    tools:context=".ui.search.SearchActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,7 +25,7 @@
             android:text="@string/search" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -33,27 +33,46 @@
         android:layout_marginVertical="@dimen/half_padding"
         android:background="@drawable/search_background">
 
+        <ImageView
+            style="@style/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_icon"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="12dp"/>
+
         <EditText
             style="@style/editText"
-            android:id="@+id/search_bar"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/search_bar"
             android:hint="@string/search"
             android:maxLines="1"
             android:maxLength="50"
             android:inputType="text"
-            android:padding="@dimen/half_padding"
-            android:drawableStart="@drawable/search"
-            android:drawablePadding="@dimen/half_padding"
             android:imeOptions="actionDone"
             android:singleLine="true"/>
 
         <ImageView
             style="@style/search_icon"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/search_clear"
-            android:src="@drawable/close"
-            android:visibility="invisible"
-            android:layout_gravity="end"/>
-    </FrameLayout>
+            android:src="@drawable/clear_btn"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="12dp"
+            android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <ProgressBar
+        android:id="@+id/search_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/white_blue"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/search_err_not_found"

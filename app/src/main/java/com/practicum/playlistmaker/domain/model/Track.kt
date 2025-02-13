@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.domain.model
 
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -12,7 +12,8 @@ data class Track(
     val collectionName: String, // Альбом
     val releaseDate: String, // Год релиза
     val primaryGenreName: String, // Жанр
-    val country: String // Страна исполнителя
+    val country: String, // Страна исполнителя
+    val previewUrl: String //Ссылка на превью(первые 30 сек) трека
 ) : Serializable{
     fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
     fun timeValidFormat() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())

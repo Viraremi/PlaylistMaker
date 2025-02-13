@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.R
 
 const val UI_THEME = "ui_theme"
 const val UI_THEME_KEY = "ui_theme_key"
