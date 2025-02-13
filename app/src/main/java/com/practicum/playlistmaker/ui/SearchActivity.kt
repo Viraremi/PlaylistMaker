@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui
 
 import android.content.Context
 import android.content.Intent
@@ -22,6 +22,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.ITunesAPI
+import com.practicum.playlistmaker.PlayerActivity
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.ResponseTracks
+import com.practicum.playlistmaker.domain.model.Track
+import com.practicum.playlistmaker.TrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,7 +66,6 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
-    private lateinit var searchHistory: SearchHistory
     private lateinit var searchResultsAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private var searchInstanceState = ""
@@ -97,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
         val historyRecyclerView = findViewById<RecyclerView>(R.id.search_history_recycler)
         progressBar = findViewById(R.id.search_progress_bar)
 
-        searchHistory = SearchHistory(getSharedPreferences(HISTORY, MODE_PRIVATE), gson)
+        val searchHistory = Creator.provideInteractorHistory()
         historyAdapterList.addAll(searchHistory.getHistory())
         if (searchHistory.getHistory().isEmpty()) historyLayout.visibility = View.GONE
 
@@ -216,11 +222,11 @@ class SearchActivity : AppCompatActivity() {
                             searchResultsAdapterList.clear()
                             searchResultsAdapterList.addAll(result)
                             searchResultsAdapter.notifyDataSetChanged()
-                            searchRecycleView.visibility = View.VISIBLE
+                            showResult()
                         }
                     } else {
                         searchResultsAdapterList.clear()
-                        err_connect.visibility = View.VISIBLE
+                        showErrorConnection()
                     }
                 }
 
@@ -230,6 +236,11 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    fun showResult(){
+        progressBar.visibility = View.GONE
+        searchRecycleView.visibility = View.VISIBLE
     }
 
     fun showErrorConnection(){

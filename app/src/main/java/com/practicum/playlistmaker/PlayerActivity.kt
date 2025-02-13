@@ -13,6 +13,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.domain.model.Track
+import com.practicum.playlistmaker.ui.SearchActivity
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
