@@ -198,11 +198,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchRequest(){
-        handler.post{
-            if (searchText.isNotEmpty()) {
-                showLoading()
-                getTracksUseCase.execute(searchText, object : Consumer<List<Track>> {
-                    override fun consume(data: ConsumerData<List<Track>>) {
+        if (searchText.isNotEmpty()) {
+            showLoading()
+            getTracksUseCase.execute(searchText, object : Consumer<List<Track>> {
+                override fun consume(data: ConsumerData<List<Track>>) {
+                    handler.post {
                         when (data) {
                             is ConsumerData.Data -> {
                                 if (data.value.isEmpty()){
@@ -221,8 +221,8 @@ class SearchActivity : AppCompatActivity() {
                             }
                         }
                     }
-                })
-            }
+                }
+            })
         }
     }
 
