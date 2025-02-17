@@ -19,13 +19,15 @@ import com.practicum.playlistmaker.settings.data.RepositorySettigsImpl
 import com.practicum.playlistmaker.settings.domain.Interactor.InteractorSettingsImpl
 import com.practicum.playlistmaker.settings.domain.api.InteractorSettings
 import com.practicum.playlistmaker.settings.domain.api.RepositorySettings
+import com.practicum.playlistmaker.sharing.data.RepositorySharingImpl
+import com.practicum.playlistmaker.sharing.domain.api.InteractorSharing
+import com.practicum.playlistmaker.sharing.domain.api.RepositorySharing
+import com.practicum.playlistmaker.sharing.domain.interactor.InteractorSharingImpl
 
 object Creator {
 
     const val SP_UI_THEME = "ui_theme"
     const val SP_SEARCH_HISTORY = "search_history"
-
-    //searchLogic
 
     private lateinit var application: Application
     val gson = Gson()
@@ -34,8 +36,9 @@ object Creator {
         Creator.application = application
     }
 
-    //historySharedPref
+    //searchLogic
 
+    //historySharedPref
     private fun provideHistorySP(): SharedPreferences{
         return application.getSharedPreferences(SP_SEARCH_HISTORY, Context.MODE_PRIVATE)
     }
@@ -49,7 +52,6 @@ object Creator {
     }
 
     //tracksRequestUseCase
-
     private fun provideNetworkClient(): ITunesRetrofitNetworkClientImpl {
         return ITunesRetrofitNetworkClientImpl()
     }
@@ -87,4 +89,12 @@ object Creator {
     }
 
     //sharingLogic
+
+    private fun provideSharingRepository() : RepositorySharing{
+        return RepositorySharingImpl(application)
+    }
+
+    fun provideSharingInteractor() : InteractorSharing{
+        return InteractorSharingImpl(provideSharingRepository())
+    }
 }

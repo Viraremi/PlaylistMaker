@@ -35,7 +35,11 @@ class SettingsActivity : AppCompatActivity() {
         val uaButton = findViewById<FrameLayout>(R.id.settings_btn_ua)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
+        val sharingInteractor = Creator.provideSharingInteractor()
+
         shareButton.setOnClickListener {
+            sharingInteractor.shareApp()
+
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.praktikum_url))
@@ -43,6 +47,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         supportButton.setOnClickListener{
+            sharingInteractor.writeToSupport()
+
             val supportIntent = Intent(Intent.ACTION_SENDTO)
             supportIntent.setData(Uri.parse("mailto:"))
             supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
@@ -52,6 +58,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         uaButton.setOnClickListener{
+            sharingInteractor.openUserAgreement()
+
             val uaIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.praktikum_offer)))
             startActivity((uaIntent))
         }
