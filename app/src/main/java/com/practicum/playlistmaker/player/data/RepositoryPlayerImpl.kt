@@ -7,9 +7,7 @@ import com.practicum.playlistmaker.player.domain.model.PlayerState
 class RepositoryPlayerImpl(): RepositoryPlayer {
 
     private var playerState = PlayerState.DEFAULT
-    override fun getPlayerState(): PlayerState{
-        return playerState
-    }
+    override fun getPlayerState(): PlayerState{ return playerState }
 
     private var mediaPlayer = MediaPlayer()
 
@@ -25,15 +23,12 @@ class RepositoryPlayerImpl(): RepositoryPlayer {
         return mediaPlayer.getCurrentPosition()
     }
 
-    override fun prepare(url: String) {
+    override fun prepare(url: String, onComplete: () -> Unit) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = PlayerState.PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = PlayerState.PREPARED
-        }
+        mediaPlayer.setOnPreparedListener { onComplete.invoke() }
+        mediaPlayer.setOnCompletionListener { onComplete.invoke() }
+        playerState = PlayerState.PREPARED
     }
 
     override fun play() {
