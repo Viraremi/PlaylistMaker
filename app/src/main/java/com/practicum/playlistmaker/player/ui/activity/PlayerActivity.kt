@@ -1,7 +1,6 @@
-package com.practicum.playlistmaker.player.ui
+package com.practicum.playlistmaker.player.ui.activity
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
