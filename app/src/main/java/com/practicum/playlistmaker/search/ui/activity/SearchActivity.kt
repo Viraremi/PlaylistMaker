@@ -35,32 +35,14 @@ import java.io.Serializable
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val PLAYER_INTENT_KEY = "player_intent_key"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     val viewModel by lazy { ViewModelProvider(this)[SearchViewModel::class.java] }
-
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
 
     lateinit var err_connect: LinearLayout
     lateinit var err_found: LinearLayout
     lateinit var progressBar: ProgressBar
     lateinit var searchRecycleView: RecyclerView
-    private val searchRunnable = Runnable { if (searchText.isNotEmpty()) viewModel.loadData(searchText) }
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
 
     private lateinit var searchResultsAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -103,7 +85,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         err_btn_refrech.setOnClickListener{
-            searchDebounce()
+            viewModel.searchDebounce(searchText)
         }
 
         btn_clear.setOnClickListener{
@@ -142,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
                 err_found.visibility = View.GONE
                 err_connect.visibility = View.GONE
                 historyLayout.visibility = if (search_bar.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
-                searchDebounce()
+                viewModel.searchDebounce(searchText)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -152,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
         search_bar.addTextChangedListener(searchTextWatcher)
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 searchHistory.add(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
@@ -162,7 +144,7 @@ class SearchActivity : AppCompatActivity() {
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
             }
@@ -190,11 +172,6 @@ class SearchActivity : AppCompatActivity() {
                 SearchState.Loading -> showLoading()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(searchRunnable)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
