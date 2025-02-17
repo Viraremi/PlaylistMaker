@@ -12,9 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.util.App
 import com.practicum.playlistmaker.R
-
-const val UI_THEME = "ui_theme"
-const val UI_THEME_KEY = "ui_theme_key"
+import com.practicum.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,13 +56,8 @@ class SettingsActivity : AppCompatActivity() {
             startActivity((uaIntent))
         }
 
-        val sharedPref = getSharedPreferences(UI_THEME, MODE_PRIVATE)
-        themeSwitcher.isChecked = sharedPref.getBoolean(UI_THEME_KEY, false)
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPref.edit()
-                .putBoolean(UI_THEME_KEY, checked)
-                .apply()
-        }
+        val themeInteractor = Creator.provideSettingsInteractor()
+        themeSwitcher.isChecked = themeInteractor.getTheme()
+        themeSwitcher.setOnCheckedChangeListener { _, checked -> themeInteractor.switchTheme(checked) }
     }
 }
