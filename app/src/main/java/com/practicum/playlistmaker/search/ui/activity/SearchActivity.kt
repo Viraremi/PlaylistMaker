@@ -28,6 +28,7 @@ import com.practicum.playlistmaker.search.domain.consumer.Consumer
 import com.practicum.playlistmaker.search.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
+import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
 import java.io.Serializable
@@ -43,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var err_found: LinearLayout
     lateinit var progressBar: ProgressBar
     lateinit var searchRecycleView: RecyclerView
+    lateinit var historyLayout: ScrollView
 
     private lateinit var searchResultsAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -71,14 +73,14 @@ class SearchActivity : AppCompatActivity() {
         searchRecycleView = findViewById(R.id.search_result_recycler)
         err_found = findViewById(R.id.search_err_not_found)
         err_connect = findViewById(R.id.search_err_no_connect)
-        val historyLayout = findViewById<ScrollView>(R.id.search_history)
+        historyLayout = findViewById(R.id.search_history)
         val btn_history_clear = findViewById<Button>(R.id.search_history_clear)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.search_history_recycler)
         progressBar = findViewById(R.id.search_progress_bar)
 
-        val searchHistory = Creator.provideInteractorHistory()
-        historyAdapterList.addAll(searchHistory.getHistory())
-        if (searchHistory.getHistory().isEmpty()) historyLayout.visibility = View.GONE
+        historyAdapterList.addAll(viewModel.getHistory())
+
+        viewModel.getHistory()
 
         btn_back.setOnClickListener{
             finish()
@@ -95,22 +97,20 @@ class SearchActivity : AppCompatActivity() {
             searchResultsAdapterList.clear()
             searchResultsAdapter.notifyDataSetChanged()
             searchRecycleView.visibility = View.GONE
-            if (searchHistory.getHistory().isNotEmpty()) {
+            if (viewModel.getHistory().isNotEmpty()) {
                 //Вот эти строки
                 historyAdapterList.clear()
-                historyAdapterList.addAll(searchHistory.getHistory())
+                historyAdapterList.addAll(viewModel.getHistory())
                 historyAdapter.notifyDataSetChanged()
                 //При надобности можно будет вынести в отдельную функцию historyRefresh
-                historyLayout.visibility = View.VISIBLE
             }
             else historyLayout.visibility = View.GONE
         }
 
         btn_history_clear.setOnClickListener{
-            searchHistory.clear()
+            viewModel.clear()
             historyAdapterList.clear()
             searchResultsAdapter.notifyDataSetChanged()
-            historyLayout.visibility = View.GONE
         }
 
         val searchTextWatcher = object : TextWatcher{
@@ -124,18 +124,18 @@ class SearchActivity : AppCompatActivity() {
                 err_found.visibility = View.GONE
                 err_connect.visibility = View.GONE
                 historyLayout.visibility = if (search_bar.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
-                viewModel.searchDebounce(searchText)
             }
 
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
+                viewModel.searchDebounce(searchText)
             }
         }
         search_bar.addTextChangedListener(searchTextWatcher)
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
             if (viewModel.clickDebounce()) {
-                searchHistory.add(track)
+                viewModel.add(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
             }
@@ -170,6 +170,13 @@ class SearchActivity : AppCompatActivity() {
                     showResult()
                 }
                 SearchState.Loading -> showLoading()
+            }
+        }
+
+        viewModel.getStateHistory().observe(this){ state ->
+            when(state){
+                SearchHistoryState.Empty -> hideHistory()
+                is SearchHistoryState.HasValue -> showHistory()
             }
         }
     }
@@ -213,5 +220,13 @@ class SearchActivity : AppCompatActivity() {
         err_found.visibility = View.GONE
         err_connect.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
+    }
+
+    private fun showHistory(){
+        historyLayout.visibility = View.VISIBLE
+    }
+
+    private fun hideHistory(){
+        historyLayout.visibility = View.GONE
     }
 }
