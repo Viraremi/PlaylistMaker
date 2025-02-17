@@ -1,7 +1,4 @@
 package com.practicum.playlistmaker.settings.ui
-
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -10,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.practicum.playlistmaker.util.App
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import com.practicum.playlistmaker.util.Creator
