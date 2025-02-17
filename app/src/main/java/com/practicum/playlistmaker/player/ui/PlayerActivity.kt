@@ -14,57 +14,22 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.SearchActivity
+import com.practicum.playlistmaker.util.Creator
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val DELAY = 1000L
     }
 
-    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = Creator.providePlayerInteractor()
     private lateinit var playBtn: ImageView
     private lateinit var timer: TextView
-    private var mediaPlayer = MediaPlayer()
     private var handler: Handler? = null
-
-    private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playBtn.setImageResource(R.drawable.button_play)
-            timer.text = getString(R.string.player_timer_zero_zero)
-            playerState = STATE_PREPARED
-        }
-    }
-
-    private fun startPlayer() {
-        playBtn.setImageResource(R.drawable.button_pause)
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
-    }
-
-    private fun pausePlayer() {
-        playBtn.setImageResource(R.drawable.button_play)
-        mediaPlayer.pause()
-        playerState = STATE_PAUSED
-    }
-
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> { pausePlayer() }
-            STATE_PREPARED, STATE_PAUSED -> { startPlayer() }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,17 +73,17 @@ class PlayerActivity : AppCompatActivity() {
         infoYearView.text = track.releaseDate.substring(0, 4)
         infoGenreView.text = track.primaryGenreName
         infoCountryView.text = track.country
-        preparePlayer(track.previewUrl)
+        mediaPlayer.prepare(track.previewUrl)
 
         playBtn.setOnClickListener{
-            playbackControl()
+            mediaPlayer.playbackControl()
             handler?.post(createUpdateTimerTask())
         }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        mediaPlayer.pause()
         handler?.removeCallbacksAndMessages(null)
     }
 
@@ -131,8 +96,8 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (playerState == STATE_PLAYING) {
-                    val elapsedTime = mediaPlayer.getCurrentPosition()
+                if (mediaPlayer.getPlayerState() == PlayerState.PLAYING) {
+                    val elapsedTime = mediaPlayer.getPosition()
                     timer.text = dateFormat.format(elapsedTime.toLong())
                     handler?.postDelayed(this, DELAY)
                 }
