@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.util.App
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import com.practicum.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
@@ -38,30 +39,21 @@ class SettingsActivity : AppCompatActivity() {
         val sharingInteractor = Creator.provideSharingInteractor()
 
         shareButton.setOnClickListener {
-            sharingInteractor.shareApp()
-
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain")
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.praktikum_url))
-            startActivity(shareIntent)
+            sharingInteractor.shareApp(getString(R.string.praktikum_url))
         }
 
         supportButton.setOnClickListener{
-            sharingInteractor.writeToSupport()
-
-            val supportIntent = Intent(Intent.ACTION_SENDTO)
-            supportIntent.setData(Uri.parse("mailto:"))
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
-            supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_theme))
-            supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
-            startActivity(supportIntent)
+            sharingInteractor.writeToSupport(
+                EmailData(
+                    theme = getString(R.string.email_theme),
+                    text = getString(R.string.email_text),
+                    email = getString(R.string.email)
+                )
+            )
         }
 
         uaButton.setOnClickListener{
-            sharingInteractor.openUserAgreement()
-
-            val uaIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.praktikum_offer)))
-            startActivity((uaIntent))
+            sharingInteractor.openUserAgreement(getString(R.string.praktikum_offer))
         }
 
         val themeInteractor = Creator.provideSettingsInteractor()
