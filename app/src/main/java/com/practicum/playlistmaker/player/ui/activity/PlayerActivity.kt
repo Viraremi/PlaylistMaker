@@ -26,7 +26,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playBtn: ImageView
     private lateinit var timer: TextView
-    private val handler = Handler(Looper.getMainLooper())
 
     val viewModel by lazy {
         ViewModelProvider(this)[PlayerViewModel::class.java]
@@ -76,7 +75,6 @@ class PlayerActivity : AppCompatActivity() {
 
         playBtn.setOnClickListener{
             viewModel.playbackControl()
-            //handler.post(createUpdateTimerTask())
         }
 
         viewModel.getStatePlayer().observe(this){ state ->
@@ -87,31 +85,19 @@ class PlayerActivity : AppCompatActivity() {
                     playBtn.setImageResource(R.drawable.button_pause)
             }
         }
+
+        viewModel.getStateTimer().observe(this){ state ->
+            timer.text = state
+        }
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pause()
-        handler.removeCallbacksAndMessages(null)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.release()
-        handler.removeCallbacksAndMessages(null)
     }
-
-//    private fun createUpdateTimerTask(): Runnable {
-//        return object : Runnable {
-//            override fun run() {
-//                if (mediaPlayer.getPlayerState() == PlayerState.PLAYING) {
-//                    val elapsedTime = mediaPlayer.getPosition()
-//                    timer.text = dateFormat.format(elapsedTime.toLong())
-//                    handler.postDelayed(this, DELAY)
-//                }
-//            }
-//        }
-//    }
-
-    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 }
