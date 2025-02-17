@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -19,6 +19,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.util.Creator
@@ -27,6 +28,8 @@ import com.practicum.playlistmaker.search.domain.consumer.Consumer
 import com.practicum.playlistmaker.search.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
+import com.practicum.playlistmaker.search.ui.model.SearchState
+import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
 import java.io.Serializable
 
 class SearchActivity : AppCompatActivity() {
@@ -36,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private val getTracksUseCase = Creator.provideGetTracksUseCase()
+    val viewModel by lazy { ViewModelProvider(this)[SearchViewModel::class.java] }
 
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
@@ -53,7 +56,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var err_found: LinearLayout
     lateinit var progressBar: ProgressBar
     lateinit var searchRecycleView: RecyclerView
-    private val searchRunnable = Runnable { searchRequest() }
+    private val searchRunnable = Runnable { if (searchText.isNotEmpty()) viewModel.loadData(searchText) }
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
@@ -167,6 +170,26 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter.notifyDataSetChanged()
         historyRecyclerView.adapter = historyAdapter
         historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        viewModel.getState().observe(this){ state ->
+            when(state){
+                is SearchState.ConnectionError -> {
+                    searchResultsAdapterList.clear()
+                    showErrorConnection()
+                }
+                is SearchState.EmptyError -> {
+                    searchResultsAdapterList.clear()
+                    showErrorEmptyReponse()
+                }
+                is SearchState.Content -> {
+                    searchResultsAdapterList.clear()
+                    searchResultsAdapterList.addAll(state.data)
+                    searchResultsAdapter.notifyDataSetChanged()
+                    showResult()
+                }
+                SearchState.Loading -> showLoading()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -193,51 +216,22 @@ class SearchActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.search_bar).setText(searchInstanceState)
     }
 
-    private fun searchRequest(){
-        if (searchText.isNotEmpty()) {
-            showLoading()
-            getTracksUseCase.execute(searchText, object : Consumer<List<Track>> {
-                override fun consume(data: ConsumerData<List<Track>>) {
-                    handler.post {
-                        when (data) {
-                            is ConsumerData.Data -> {
-                                if (data.value.isEmpty()){
-                                    showErrorEmptyReponse()
-                                    searchResultsAdapterList.clear()
-                                } else {
-                                    searchResultsAdapterList.clear()
-                                    searchResultsAdapterList.addAll(data.value)
-                                    searchResultsAdapter.notifyDataSetChanged()
-                                    showResult()
-                                }
-                            }
-                            is ConsumerData.Error -> {
-                                showErrorConnection()
-                                searchResultsAdapterList.clear()
-                            }
-                        }
-                    }
-                }
-            })
-        }
-    }
-
-    fun showResult(){
+    private fun showResult(){
         progressBar.visibility = View.GONE
         searchRecycleView.visibility = View.VISIBLE
     }
 
-    fun showErrorConnection(){
+    private fun showErrorConnection(){
         progressBar.visibility = View.GONE
         err_connect.visibility = View.VISIBLE
     }
 
-    fun showErrorEmptyReponse(){
+    private fun showErrorEmptyReponse(){
         progressBar.visibility = View.GONE
         err_found.visibility = View.VISIBLE
     }
 
-    fun showLoading(){
+    private fun showLoading(){
         searchRecycleView.visibility = View.GONE
         err_found.visibility = View.GONE
         err_connect.visibility = View.GONE

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.settings.ui
+package com.practicum.playlistmaker.settings.ui.activity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -6,8 +6,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.settings.ui.viewModel.SettingsViewModel
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import com.practicum.playlistmaker.util.Creator
 
@@ -22,6 +24,10 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
+        val viewModel by lazy {
+            ViewModelProvider(this)[SettingsViewModel::class.java]
+        }
+
         val button_settings_back = findViewById<ImageView>(R.id.button_settings_back)
         button_settings_back.setOnClickListener{
             finish()
@@ -32,14 +38,12 @@ class SettingsActivity : AppCompatActivity() {
         val uaButton = findViewById<FrameLayout>(R.id.settings_btn_ua)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        val sharingInteractor = Creator.provideSharingInteractor()
-
         shareButton.setOnClickListener {
-            sharingInteractor.shareApp(getString(R.string.praktikum_url))
+            viewModel.shareApp(getString(R.string.praktikum_url))
         }
 
         supportButton.setOnClickListener{
-            sharingInteractor.writeToSupport(
+            viewModel.writeSupport(
                 EmailData(
                     theme = getString(R.string.email_theme),
                     text = getString(R.string.email_text),
@@ -49,11 +53,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         uaButton.setOnClickListener{
-            sharingInteractor.openUserAgreement(getString(R.string.praktikum_offer))
+            viewModel.openUA(getString(R.string.praktikum_offer))
         }
 
-        val themeInteractor = Creator.provideSettingsInteractor()
-        themeSwitcher.isChecked = themeInteractor.getTheme()
-        themeSwitcher.setOnCheckedChangeListener { _, checked -> themeInteractor.switchTheme(checked) }
+        themeSwitcher.setOnCheckedChangeListener { _, checked -> viewModel.themeSwitch(checked) }
     }
 }

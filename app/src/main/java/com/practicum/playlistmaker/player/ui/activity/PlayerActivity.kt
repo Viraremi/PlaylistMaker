@@ -15,7 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.ui.SearchActivity
+import com.practicum.playlistmaker.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker.util.Creator
 import java.util.Locale
 

@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.search.ui.SearchActivity
-import com.practicum.playlistmaker.settings.ui.SettingsActivity
+import com.practicum.playlistmaker.search.ui.activity.SearchActivity
+import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
 import com.practicum.playlistmaker.library.LibraryActivity
 
 class MainActivity : AppCompatActivity() {
