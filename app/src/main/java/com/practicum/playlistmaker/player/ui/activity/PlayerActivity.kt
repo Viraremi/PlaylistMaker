@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.ui.activity
 
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,9 +16,8 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
-import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
-import java.util.Locale
+import com.practicum.playlistmaker.util.TimeFormatter
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -61,7 +59,9 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = intent.getSerializableExtra(SearchActivity.PLAYER_INTENT_KEY) as Track
+
+        val trackId = intent.getIntExtra(SearchActivity.PLAYER_INTENT_KEY, -1)
+        val track = viewModel.getTrackById(trackId)
         Glide.with(this)
             .load(track.getCoverArtwork())
             .centerCrop()
@@ -70,7 +70,7 @@ class PlayerActivity : AppCompatActivity() {
             .into(artView)
         trackNameView.text = track.trackName
         trackArtistView.text = track.artistName
-        infoTimeView.text = track.timeValidFormat()
+        infoTimeView.text = TimeFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
         infoAlbumView.text = track.collectionName
         infoYearView.text = track.releaseDate.substring(0, 4)
         infoGenreView.text = track.primaryGenreName
@@ -111,7 +111,7 @@ class PlayerActivity : AppCompatActivity() {
             override fun run() {
                 if (viewModel.getPlayerState() == PlayerState.PLAYING) {
                     val elapsedTime = viewModel.getPlayerPosition()
-                    timer.text = viewModel.dateFormat.format(elapsedTime.toLong())
+                    timer.text = TimeFormatter.getValidTimeFormat(elapsedTime.toLong())
                     handler.postDelayed(this, DELAY)
                 }
             }

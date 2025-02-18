@@ -160,7 +160,7 @@ class SearchActivity : AppCompatActivity() {
             if (clickDebounce()) {
                 viewModel.add(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
-                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, viewModel.getTrackId(track)))
             }
         }
         searchRecycleView.adapter = searchResultsAdapter
@@ -169,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
             if (clickDebounce()) {
                 val playerIntent = Intent(this, PlayerActivity::class.java)
-                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, track as Serializable))
+                startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, viewModel.getTrackId(track)))
             }
         }
         historyAdapter.notifyDataSetChanged()

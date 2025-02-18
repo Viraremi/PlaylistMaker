@@ -18,4 +18,8 @@ class InteractorHistoryImpl(
     override fun clear() {
         repository.clear()
     }
+
+    override fun getIdByTrack(track: Track): Int? {
+        return repository.getIdByTrack(track)
+    }
 }

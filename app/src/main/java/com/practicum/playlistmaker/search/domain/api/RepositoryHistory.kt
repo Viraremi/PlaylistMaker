@@ -6,4 +6,5 @@ interface RepositoryHistory {
     fun getHistory(): MutableList<Track>
     fun add(item: Track)
     fun clear()
+    fun getIdByTrack(track: Track): Int?
 }

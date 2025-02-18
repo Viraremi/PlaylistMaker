@@ -35,6 +35,11 @@ class RepositoryHistoryImpl(
         save()
     }
 
+    override fun getIdByTrack(track: Track): Int? {
+        val id = history.indexOf(track)
+        return if (id == -1) { null } else { id }
+    }
+
     override fun add(item: Track) {
         if (history.contains(item)){
             history.remove(item)

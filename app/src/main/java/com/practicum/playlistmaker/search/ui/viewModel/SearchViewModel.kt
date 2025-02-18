@@ -66,4 +66,8 @@ class SearchViewModel: ViewModel() {
     fun add(track: Track){
         historyInteractor.add(track)
     }
+
+    fun getTrackId(track: Track): Int?{
+        return historyInteractor.getIdByTrack(track)
+    }
 }
