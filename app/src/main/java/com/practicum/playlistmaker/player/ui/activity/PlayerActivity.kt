@@ -19,16 +19,20 @@ import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
-import com.practicum.playlistmaker.util.Creator
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playBtn: ImageView
     private lateinit var timer: TextView
+    private val handler = Handler(Looper.getMainLooper())
 
     val viewModel by lazy {
         ViewModelProvider(this)[PlayerViewModel::class.java]
+    }
+
+    companion object {
+        private const val DELAY = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,29 +79,42 @@ class PlayerActivity : AppCompatActivity() {
 
         playBtn.setOnClickListener{
             viewModel.playbackControl()
+            handler.post(createUpdateTimerTask())
         }
 
-        viewModel.getStatePlayer().observe(this){ state ->
+        viewModel.getStatePlayerView().observe(this){ state ->
             when(state){
-                PlayerViewState.Pause, PlayerViewState.Prepare ->
+                PlayerViewState.Pause, PlayerViewState.Prepare -> {
                     playBtn.setImageResource(R.drawable.button_play)
-                PlayerViewState.Play ->
+                }
+                PlayerViewState.Play -> {
                     playBtn.setImageResource(R.drawable.button_pause)
+                }
             }
-        }
-
-        viewModel.getStateTimer().observe(this){ state ->
-            timer.text = state
         }
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+        handler.removeCallbacksAndMessages(null)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.release()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    private fun createUpdateTimerTask(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                if (viewModel.getPlayerState() == PlayerState.PLAYING) {
+                    val elapsedTime = viewModel.getPlayerPosition()
+                    timer.text = viewModel.dateFormat.format(elapsedTime.toLong())
+                    handler.postDelayed(this, DELAY)
+                }
+            }
+        }
     }
 }

@@ -1,31 +1,19 @@
 package com.practicum.playlistmaker.search.ui.viewModel
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.search.domain.consumer.Consumer
 import com.practicum.playlistmaker.search.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.ui.activity.SearchActivity
-import com.practicum.playlistmaker.search.ui.activity.SearchActivity.Companion
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.util.Creator
 
 class SearchViewModel: ViewModel() {
 
-    companion object {
-        private const val REQUECT_KEY = "REQUEST_KEY"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
     private val getTracksUseCase = Creator.provideGetTracksUseCase()
     private val historyInteractor = Creator.provideInteractorHistory()
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateRequest = MutableLiveData<SearchState>()
     fun getState(): LiveData<SearchState> = stateRequest
@@ -77,26 +65,5 @@ class SearchViewModel: ViewModel() {
 
     fun add(track: Track){
         historyInteractor.add(track)
-    }
-
-    fun searchDebounce(searchText: String){
-        handler.removeCallbacksAndMessages(REQUECT_KEY)
-        val searchRunnable = Runnable { loadData(searchText) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            REQUECT_KEY,
-            postTime,
-        )
-    }
-
-    private var isClickAllowed = true
-    fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
     }
 }

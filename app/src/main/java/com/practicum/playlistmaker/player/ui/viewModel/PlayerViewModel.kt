@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.player.ui.viewModel
 
 import android.icu.text.SimpleDateFormat
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,26 +11,13 @@ import java.util.Locale
 
 class PlayerViewModel() : ViewModel() {
 
-    companion object {
-        private const val DELAY = 1000L
-    }
-
     val interactor = Creator.providePlayerInteractor()
-    private val handler = Handler(Looper.getMainLooper())
 
-    private val statePlayer = MutableLiveData<PlayerViewState>()
-    fun getStatePlayer(): LiveData<PlayerViewState> = statePlayer
-
-    private val stateTimer = MutableLiveData<String>()
-    fun getStateTimer(): LiveData<String> = stateTimer
+    private val statePlayerView = MutableLiveData<PlayerViewState>()
+    fun getStatePlayerView(): LiveData<PlayerViewState> = statePlayerView
 
     fun prepare(url: String){
-        interactor.prepare(
-            url = url,
-            onComplete = {
-                statePlayer.value = PlayerViewState.Prepare
-            }
-        )
+        interactor.prepare(url = url)
     }
 
     fun playbackControl(){
@@ -45,31 +30,25 @@ class PlayerViewModel() : ViewModel() {
 
     fun play(){
         interactor.play()
-        handler.post(createUpdateTimerTask())
-        statePlayer.value = PlayerViewState.Play
+        statePlayerView.value = PlayerViewState.Play
     }
 
     fun pause(){
         interactor.pause()
-        statePlayer.value = PlayerViewState.Pause
-        handler.removeCallbacksAndMessages(null)
+        statePlayerView.value = PlayerViewState.Pause
     }
 
     fun release(){
         interactor.release()
-        handler.removeCallbacksAndMessages(null)
     }
 
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (interactor.getPlayerState() == PlayerState.PLAYING) {
-                    val elapsedTime = interactor.getPosition()
-                    stateTimer.value = dateFormat.format(elapsedTime.toLong())
-                    handler.postDelayed(this, DELAY)
-                }
-            }
-        }
+    fun getPlayerState(): PlayerState{
+        return interactor.getPlayerState()
     }
-    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
+
+    fun getPlayerPosition(): Int{
+        return interactor.getPosition()
+    }
+
+    val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 }
