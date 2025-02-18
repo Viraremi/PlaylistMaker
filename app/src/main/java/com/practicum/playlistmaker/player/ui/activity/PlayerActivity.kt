@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.player.ui.activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -13,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
@@ -23,14 +20,9 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playBtn: ImageView
     private lateinit var timer: TextView
-    private val handler = Handler(Looper.getMainLooper())
 
     val viewModel by lazy {
         ViewModelProvider(this)[PlayerViewModel::class.java]
-    }
-
-    companion object {
-        private const val DELAY = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,15 +71,15 @@ class PlayerActivity : AppCompatActivity() {
 
         playBtn.setOnClickListener{
             viewModel.playbackControl()
-            handler.post(createUpdateTimerTask())
         }
 
         viewModel.getStatePlayerView().observe(this){ state ->
             when(state){
-                PlayerViewState.Pause, PlayerViewState.Prepare -> {
+                is PlayerViewState.Pause, PlayerViewState.Prepare -> {
                     playBtn.setImageResource(R.drawable.button_play)
                 }
-                PlayerViewState.Play -> {
+                is PlayerViewState.Play -> {
+                    timer.text = state.data
                     playBtn.setImageResource(R.drawable.button_pause)
                 }
             }
@@ -97,24 +89,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
-        handler.removeCallbacksAndMessages(null)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.release()
-        handler.removeCallbacksAndMessages(null)
-    }
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (viewModel.getPlayerState() == PlayerState.PLAYING) {
-                    val elapsedTime = viewModel.getPlayerPosition()
-                    timer.text = TimeFormatter.getValidTimeFormat(elapsedTime.toLong())
-                    handler.postDelayed(this, DELAY)
-                }
-            }
-        }
     }
 }

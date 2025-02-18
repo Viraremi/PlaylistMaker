@@ -23,11 +23,11 @@ class RepositoryPlayerImpl(): RepositoryPlayer {
         return mediaPlayer.getCurrentPosition()
     }
 
-    override fun prepare(url: String) {
+    override fun prepare(url: String, onComplete: () -> Unit) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener { playerState = PlayerState.PREPARED }
-        mediaPlayer.setOnCompletionListener { playerState = PlayerState.PREPARED }
+        mediaPlayer.setOnPreparedListener { onComplete.invoke() }
+        mediaPlayer.setOnCompletionListener { onComplete.invoke() }
         playerState = PlayerState.PREPARED
     }
 

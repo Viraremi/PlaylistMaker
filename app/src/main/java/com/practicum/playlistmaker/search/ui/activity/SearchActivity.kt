@@ -29,7 +29,6 @@ import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
-import java.io.Serializable
 
 class SearchActivity : AppCompatActivity() {
     companion object{
@@ -53,29 +52,6 @@ class SearchActivity : AppCompatActivity() {
     private var searchText = ""
     private var searchResultsAdapterList = mutableListOf<Track>()
     private var historyAdapterList = mutableListOf<Track>()
-
-    private val handler = Handler(Looper.getMainLooper())
-
-    fun searchDebounce(searchText: String){
-        handler.removeCallbacksAndMessages(REQUECT_KEY)
-        val searchRunnable = Runnable { viewModel.loadData(searchText) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            REQUECT_KEY,
-            postTime,
-        )
-    }
-
-    private var isClickAllowed = true
-    fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +86,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         err_btn_refrech.setOnClickListener{
-            searchDebounce(searchText)
+            viewModel.searchDebounce(searchText)
         }
 
         btn_clear.setOnClickListener{
@@ -151,13 +127,13 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
-                searchDebounce(searchText)
+                viewModel.searchDebounce(searchText)
             }
         }
         search_bar.addTextChangedListener(searchTextWatcher)
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 viewModel.add(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, viewModel.getTrackId(track)))
@@ -167,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
         searchRecycleView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent.putExtra(PLAYER_INTENT_KEY, viewModel.getTrackId(track)))
             }

@@ -7,8 +7,8 @@ import com.practicum.playlistmaker.player.domain.model.PlayerState
 class InteractorPlayerImpl(
     private val repository: RepositoryPlayer
 ): InteractorPlayer {
-    override fun prepare(url: String) {
-        repository.prepare(url)
+    override fun prepare(url: String, onComplete: () -> Unit) {
+        repository.prepare(url, onComplete)
     }
 
     override fun play() {
