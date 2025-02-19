@@ -1,13 +1,13 @@
 package com.practicum.playlistmaker.main.ui.viewModel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.main.ui.model.MainViewState
+import com.practicum.playlistmaker.util.SingleLiveEvent
 
 class MainViewModel(): ViewModel() {
 
-    val state = MutableLiveData<MainViewState>()
+    private val state = SingleLiveEvent<MainViewState>()
     fun getState(): LiveData<MainViewState> = state
 
     fun showSearch(){
