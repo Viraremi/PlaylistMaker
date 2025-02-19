@@ -5,20 +5,22 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.player.domain.api.InteractorPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
+import com.practicum.playlistmaker.search.domain.api.InteractorHistory
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.util.TimeFormatter
 
-class PlayerViewModel() : ViewModel() {
+class PlayerViewModel(
+    val interactorPlayer: InteractorPlayer,
+    val interactorHistory: InteractorHistory
+) : ViewModel() {
 
     companion object {
         private const val DELAY = 1000L
     }
 
-    val interactorPlayer = Creator.providePlayerInteractor()
-    val interactorHistory = Creator.provideInteractorHistory()
     private val handler = Handler(Looper.getMainLooper())
 
     private val statePlayerView = MutableLiveData<PlayerViewState>()

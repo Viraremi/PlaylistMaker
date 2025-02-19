@@ -6,12 +6,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.settings.ui.viewModel.SettingsViewModel
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
-import com.practicum.playlistmaker.util.Creator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,9 +23,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val viewModel by lazy {
-            ViewModelProvider(this)[SettingsViewModel::class.java]
-        }
+        val viewModel by viewModel<SettingsViewModel>()
 
         val button_settings_back = findViewById<ImageView>(R.id.button_settings_back)
         button_settings_back.setOnClickListener{
