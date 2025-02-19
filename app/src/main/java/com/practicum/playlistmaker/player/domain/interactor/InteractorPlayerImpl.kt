@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.player.domain.interactor
 import com.practicum.playlistmaker.player.domain.api.InteractorPlayer
 import com.practicum.playlistmaker.player.domain.api.RepositoryPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
+import com.practicum.playlistmaker.util.TimeFormatter
 
 class InteractorPlayerImpl(
     private val repository: RepositoryPlayer
@@ -27,8 +28,8 @@ class InteractorPlayerImpl(
         repository.playbackControl()
     }
 
-    override fun getPosition(): Int {
-        return repository.getPosition()
+    override fun getPosition(): String {
+        return TimeFormatter.getValidTimeFormat(repository.getPosition().toLong())
     }
 
     override fun getPlayerState(): PlayerState {

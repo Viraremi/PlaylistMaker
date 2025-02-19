@@ -10,7 +10,6 @@ import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.search.domain.api.InteractorHistory
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.util.TimeFormatter
 
 class PlayerViewModel(
     val interactorPlayer: InteractorPlayer,
@@ -19,6 +18,7 @@ class PlayerViewModel(
 
     companion object {
         private const val DELAY = 1000L
+        private const val TOKEN_TIMER = "TIMER"
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -31,7 +31,7 @@ class PlayerViewModel(
             url = url,
             onComplete = {
                 statePlayerView.value = PlayerViewState.Prepare
-                handler.removeCallbacksAndMessages(null)
+                handler.removeCallbacksAndMessages(TOKEN_TIMER)
             }
         )
     }
@@ -45,36 +45,29 @@ class PlayerViewModel(
     }
 
     fun play(){
-        handler.post(createUpdateTimerTask())
         interactorPlayer.play()
-        statePlayerView.value = PlayerViewState.Play(
-            TimeFormatter.getValidTimeFormat(interactorPlayer.getPosition().toLong())
+        handler.removeCallbacksAndMessages(TOKEN_TIMER)
+        handler.postDelayed(
+            object : Runnable {
+                override fun run() {
+                    statePlayerView.value = PlayerViewState.Play(interactorPlayer.getPosition())
+                    handler.postDelayed(this, TOKEN_TIMER, DELAY)
+                }
+            },
+            TOKEN_TIMER,
+            DELAY
         )
     }
 
     fun pause(){
         interactorPlayer.pause()
         statePlayerView.value = PlayerViewState.Pause
-        handler.removeCallbacksAndMessages(null)
+        handler.removeCallbacksAndMessages(TOKEN_TIMER)
     }
 
     fun release(){
         interactorPlayer.release()
-        handler.removeCallbacksAndMessages(null)
-    }
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (interactorPlayer.getPlayerState() == PlayerState.PLAYING) {
-                    val elapsedTime = interactorPlayer.getPosition()
-                    statePlayerView.value = PlayerViewState.Play(
-                        TimeFormatter.getValidTimeFormat(elapsedTime.toLong())
-                    )
-                    handler.postDelayed(this, DELAY)
-                }
-            }
-        }
+        handler.removeCallbacksAndMessages(TOKEN_TIMER)
     }
 
     fun getTrackById(index: Int): Track{

@@ -9,7 +9,7 @@ class RepositoryPlayerImpl(): RepositoryPlayer {
     private var playerState = PlayerState.DEFAULT
     override fun getPlayerState(): PlayerState{ return playerState }
 
-    private var mediaPlayer = MediaPlayer()
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun playbackControl() {
         when(playerState) {
@@ -20,10 +20,11 @@ class RepositoryPlayerImpl(): RepositoryPlayer {
     }
 
     override fun getPosition(): Int {
-        return mediaPlayer.getCurrentPosition()
+        return mediaPlayer.currentPosition
     }
 
     override fun prepare(url: String, onComplete: () -> Unit) {
+        mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { onComplete.invoke() }
@@ -43,5 +44,6 @@ class RepositoryPlayerImpl(): RepositoryPlayer {
 
     override fun release() {
         mediaPlayer.release()
+        playerState = PlayerState.DEFAULT
     }
 }
