@@ -5,16 +5,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.ui.model.LibraryViewState
 import com.practicum.playlistmaker.library.ui.viewModel.LibraryViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryActivity : AppCompatActivity() {
 
-    val viewModel by lazy {
-        ViewModelProvider(this)[LibraryViewModel::class.java]
-    }
+    val viewModel by viewModel<LibraryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

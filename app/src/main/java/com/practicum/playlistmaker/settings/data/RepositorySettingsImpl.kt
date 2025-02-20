@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.settings.domain.api.RepositorySettings
 
-class RepositorySettigsImpl(
+class RepositorySettingsImpl(
     val sharedPref: SharedPreferences
 ) : RepositorySettings {
 

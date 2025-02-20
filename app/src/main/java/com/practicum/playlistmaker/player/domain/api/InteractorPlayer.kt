@@ -8,6 +8,6 @@ interface InteractorPlayer {
     fun pause()
     fun release()
     fun playbackControl()
-    fun getPosition(): Int
+    fun getPosition(): String
     fun getPlayerState(): PlayerState
 }
