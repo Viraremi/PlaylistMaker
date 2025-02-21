@@ -7,4 +7,44 @@
     android:layout_height="match_parent"
     tools:context=".library.ui.activity.LibraryActivity">
 
+    <ImageView
+        android:id="@+id/library_btn_back"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrowback"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="@dimen/padding"/>
+
+    <TextView
+        android:id="@+id/library_header"
+        style="@style/sec_menu_header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:text="Медиатека"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/library_btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/library_btn_back"/>
+    
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/library_tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/library_btn_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/library_viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white_blue"
+        app:layout_constraintTop_toBottomOf="@id/library_tabLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
