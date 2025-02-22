@@ -31,13 +31,6 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        viewModel.getState().observe(this){ state ->
-            when (state) {
-                SettingsState.OFF -> binding.themeSwitcher.isChecked = false
-                SettingsState.ON -> binding.themeSwitcher.isChecked = true
-            }
-        }
-
         binding.buttonSettingsBack.setOnClickListener{
             finish()
         }
@@ -60,6 +53,11 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.openUA(getString(R.string.praktikum_offer))
         }
 
+        binding.themeSwitcher.isChecked = when (viewModel.getState().value){
+            SettingsState.OFF -> false
+            SettingsState.ON -> true
+            null -> false
+        }
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked -> viewModel.themeSwitch(checked) }
     }
 }

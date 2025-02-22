@@ -16,6 +16,10 @@ class SettingsViewModel(
     private val state = MutableLiveData<SettingsState>()
     fun getState(): LiveData<SettingsState> = state
 
+    init {
+         if (settingsInteractor.getTheme()) state.value = SettingsState.ON else state.value = SettingsState.OFF
+    }
+
     fun themeSwitch(flag: Boolean){
         settingsInteractor.switchTheme(flag)
     }
