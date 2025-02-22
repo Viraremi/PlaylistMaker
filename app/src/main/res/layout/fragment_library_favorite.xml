@@ -8,17 +8,14 @@
     android:paddingTop="100dp">
 
     <ImageView
+        style="@style/err_img_found"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/not_found_light"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
+        style="@style/notification_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/library_err_empty_favorite"
-        android:fontFamily="@font/ys_display_medium"
-        android:textColor="@color/black"
-        android:textSize="19sp"
-        android:textFontWeight="400"
         android:layout_marginTop="16dp"/>
 </LinearLayout>
