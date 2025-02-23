@@ -1,13 +1,9 @@
 package com.practicum.playlistmaker.settings.ui.activity
 import android.os.Bundle
-import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.viewbinding.ViewBinding
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.ui.model.SettingsState
@@ -54,9 +50,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.themeSwitcher.isChecked = when (viewModel.getState().value){
-            SettingsState.OFF -> false
             SettingsState.ON -> true
-            null -> false
+            else -> false
         }
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked -> viewModel.themeSwitch(checked) }
     }

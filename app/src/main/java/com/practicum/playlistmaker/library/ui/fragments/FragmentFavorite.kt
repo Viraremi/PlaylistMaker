@@ -21,7 +21,7 @@ class FragmentFavorite : Fragment() {
     private var _binding: FragmentLibraryFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    val viewModel by viewModel<FragmentFavoriteViewModel>()
+    private val viewModel by viewModel<FragmentFavoriteViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +39,11 @@ class FragmentFavorite : Fragment() {
                 FragmentFavoriteState.EMPTY -> showErrorEmpty()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun showErrorEmpty() {

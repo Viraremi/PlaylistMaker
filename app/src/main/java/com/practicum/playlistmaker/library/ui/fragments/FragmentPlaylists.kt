@@ -21,7 +21,7 @@ class FragmentPlaylists: Fragment() {
     private var _binding: FragmentLibraryPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    val viewModel by viewModel<FragmentPlaylistViewModel>()
+    private val viewModel by viewModel<FragmentPlaylistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +39,11 @@ class FragmentPlaylists: Fragment() {
                 FragmentPlaylistState.EMPTY -> showErrorEmpty()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun showErrorEmpty() {
