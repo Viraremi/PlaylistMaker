@@ -30,7 +30,7 @@ class SearchViewModel(
     private val stateRequest = MutableLiveData<SearchState>()
     fun getState(): LiveData<SearchState> = stateRequest
 
-    fun loadData(searchText: String){
+    private fun loadData(searchText: String){
         if (searchText.isNotEmpty()){
             stateRequest.value = SearchState.Loading
             getTracksUseCase.execute(
