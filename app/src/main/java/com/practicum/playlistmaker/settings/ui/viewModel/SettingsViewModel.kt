@@ -17,7 +17,7 @@ class SettingsViewModel(
     fun getState(): LiveData<SettingsState> = state
 
     init {
-         if (settingsInteractor.getTheme()) state.value = SettingsState.ON else state.value = SettingsState.OFF
+         state.value = if (settingsInteractor.getTheme()) SettingsState.ON else SettingsState.OFF
     }
 
     fun themeSwitch(flag: Boolean){
