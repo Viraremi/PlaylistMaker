@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
 import com.practicum.playlistmaker.library.ui.activity.LibraryActivity
@@ -17,11 +18,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModel by viewModel<MainViewModel>()
+    private lateinit var binding: ActivityMainBinding
+    private val viewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -33,10 +36,6 @@ class MainActivity : AppCompatActivity() {
                 systemBars.bottom + viewPadding)
             insets
         }
-
-        val button_search = findViewById<Button>(R.id.button_search)
-        val button_library = findViewById<Button>(R.id.button_library)
-        val button_settings = findViewById<Button>(R.id.button_settings)
 
         viewModel.getState().observe(this){ state ->
             when(state){
@@ -55,15 +54,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        button_search.setOnClickListener {
+        binding.buttonSearch.setOnClickListener {
             viewModel.showSearch()
         }
 
-        button_library.setOnClickListener {
+        binding.buttonLibrary.setOnClickListener {
             viewModel.showLibrary()
         }
 
-        button_settings.setOnClickListener {
+        binding.buttonSettings.setOnClickListener {
             viewModel.showSettings()
         }
     }

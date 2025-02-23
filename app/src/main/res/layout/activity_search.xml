@@ -83,12 +83,12 @@
         android:visibility="gone">
 
         <ImageView
-            style="@style/search_err_img_found"
+            style="@style/err_img_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            style="@style/search_notification_text"
+            style="@style/notification_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/search_err_not_found"/>
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            style="@style/search_notification_text"
+            style="@style/notification_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/search_err_no_connection"/>
@@ -138,7 +138,7 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/search_notification_text"
+                style="@style/notification_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/search_history_header"

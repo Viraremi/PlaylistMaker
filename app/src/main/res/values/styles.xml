@@ -63,6 +63,7 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
     </style>
+
     <style name="track_text_second">
         <item name="fontFamily">"@font/ys_display_regular"</item>
         <item name="android:textSize">@dimen/track_text_second</item>
@@ -80,7 +81,8 @@
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginEnd">30dp</item>
     </style>
-    <style name="search_err_img_found">
+
+    <style name="err_img_found">
         <item name="android:src">@drawable/not_found_light</item>
         <item name="android:layout_gravity">center</item>
     </style>
@@ -88,7 +90,7 @@
         <item name="android:src">@drawable/no_connection_light</item>
         <item name="android:layout_gravity">center</item>
     </style>
-    <style name="search_notification_text">
+    <style name="notification_text">
         <item name="android:textAlignment">center</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/search_err_text_size</item>
@@ -107,6 +109,7 @@
         <item name="android:textSize">@dimen/search_err_refresh_text_size</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
     <style name="player_track_info_title">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">13sp</item>
@@ -140,5 +143,18 @@
     </style>
     <style name="player_btn_like">
         <item name="android:src">@drawable/button_like</item>
+    </style>
+
+    <style name="library_tabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/library_tabLayout_text</item>
+        <item name="tabSelectedTextColor">@color/black</item>
+        <item name="tabIndicatorColor">@color/black</item>
+        <item name="tabIndicatorFullWidth">false</item>
+    </style>
+    <style name="library_tabLayout_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 </resources>

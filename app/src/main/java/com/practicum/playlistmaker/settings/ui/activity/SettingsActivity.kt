@@ -1,21 +1,25 @@
 package com.practicum.playlistmaker.settings.ui.activity
 import android.os.Bundle
-import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.settings.ui.model.SettingsState
 import com.practicum.playlistmaker.settings.ui.viewModel.SettingsViewModel
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
+
+    val viewModel by viewModel<SettingsViewModel>()
+    lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_settings)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -23,23 +27,15 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val viewModel by viewModel<SettingsViewModel>()
-
-        val button_settings_back = findViewById<ImageView>(R.id.button_settings_back)
-        button_settings_back.setOnClickListener{
+        binding.buttonSettingsBack.setOnClickListener{
             finish()
         }
 
-        val shareButton = findViewById<FrameLayout>(R.id.settings_btn_share)
-        val supportButton = findViewById<FrameLayout>(R.id.settings_btn_support)
-        val uaButton = findViewById<FrameLayout>(R.id.settings_btn_ua)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-
-        shareButton.setOnClickListener {
+        binding.settingsBtnShare.setOnClickListener {
             viewModel.shareApp(getString(R.string.praktikum_url))
         }
 
-        supportButton.setOnClickListener{
+        binding.settingsBtnSupport.setOnClickListener{
             viewModel.writeSupport(
                 EmailData(
                     theme = getString(R.string.email_theme),
@@ -49,10 +45,14 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
 
-        uaButton.setOnClickListener{
+        binding.settingsBtnUa.setOnClickListener{
             viewModel.openUA(getString(R.string.praktikum_offer))
         }
 
-        themeSwitcher.setOnCheckedChangeListener { _, checked -> viewModel.themeSwitch(checked) }
+        binding.themeSwitcher.isChecked = when (viewModel.getState().value){
+            SettingsState.ON -> true
+            else -> false
+        }
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked -> viewModel.themeSwitch(checked) }
     }
 }

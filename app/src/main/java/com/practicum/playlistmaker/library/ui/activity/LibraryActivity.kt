@@ -5,7 +5,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivityLibraryBinding
 import com.practicum.playlistmaker.library.ui.model.LibraryViewState
 import com.practicum.playlistmaker.library.ui.viewModel.LibraryViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -14,15 +16,34 @@ class LibraryActivity : AppCompatActivity() {
 
     val viewModel by viewModel<LibraryViewModel>()
 
+    private lateinit var binding: ActivityLibraryBinding
+    private lateinit var tabMediator: TabLayoutMediator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_library)
+        binding = ActivityLibraryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_library)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        binding.libraryBtnBack.setOnClickListener { finish() }
+
+        binding.libraryViewPager.adapter = LibraryViewPagerAdapter(supportFragmentManager, lifecycle)
+
+        tabMediator = TabLayoutMediator(
+            binding.libraryTabLayout, binding.libraryViewPager
+        ) { tab, position ->
+            when(position){
+                0 -> tab.text = getString(R.string.library_tab_favorite)
+                1 -> tab.text = getString(R.string.library_tab_playlist)
+            }
+        }
+        tabMediator.attach()
 
         viewModel.getState().observe(this){state ->
             when(state){
@@ -31,5 +52,10 @@ class LibraryActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tabMediator.detach()
     }
 }
