@@ -19,7 +19,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment() {
 
     companion object {
-        const val PLAYER_INTENT_KEY = "player_intent_key"
 
         fun newInstance(): Fragment {
             return SearchFragment()

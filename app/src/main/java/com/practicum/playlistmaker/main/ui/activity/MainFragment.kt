@@ -9,7 +9,7 @@ import androidx.fragment.app.commit
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMainBinding
 import com.practicum.playlistmaker.search.ui.activity.SearchFragment
-import com.practicum.playlistmaker.library.ui.activity.LibraryActivity
+import com.practicum.playlistmaker.library.ui.activity.LibraryFragment
 import com.practicum.playlistmaker.main.ui.model.MainViewState
 import com.practicum.playlistmaker.main.ui.viewModel.MainViewModel
 import com.practicum.playlistmaker.settings.ui.activity.SettingsFragment
@@ -48,9 +48,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when(state){
-                MainViewState.LIBRARY -> {
-                    LibraryActivity.show(requireContext())
-                }
+                MainViewState.LIBRARY -> { goToFragment(LibraryFragment.newInstance()) }
                 MainViewState.SEARCH -> { goToFragment(SearchFragment.newInstance()) }
                 MainViewState.SETTINGS -> { goToFragment(SettingsFragment.newInstance()) }
             }
