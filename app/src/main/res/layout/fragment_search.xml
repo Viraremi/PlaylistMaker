@@ -5,7 +5,7 @@
     android:id="@+id/main_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.ui.activity.SearchFragment"
+    tools:context=".search.ui.fragments.SearchFragment"
     android:orientation="vertical">
 
     <TextView

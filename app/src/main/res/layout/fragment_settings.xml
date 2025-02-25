@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_settings"
-    tools:context="com.practicum.playlistmaker.settings.ui.activity.SettingsFragment">
+    tools:context="com.practicum.playlistmaker.settings.ui.fragments.SettingsFragment">
 
     <TextView
         android:layout_width="match_parent"

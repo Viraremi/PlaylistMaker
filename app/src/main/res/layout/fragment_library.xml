@@ -5,7 +5,7 @@
     android:id="@+id/main_library"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".library.ui.activity.LibraryFragment">
+    tools:context=".library.ui.fragments.LibraryFragment">
 
     <TextView
         android:id="@+id/library_header"
