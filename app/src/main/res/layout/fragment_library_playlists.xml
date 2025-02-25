@@ -7,7 +7,8 @@
     android:orientation="vertical"
     android:gravity="center|top"
     android:paddingTop="24dp"
-    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentPlaylists">
+    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentPlaylists"
+    style="@style/secondary_background">
     
     <Button
         style="@style/search_buttons"

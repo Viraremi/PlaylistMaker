@@ -157,4 +157,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textFontWeight">500</item>
     </style>
+
+    <style name="navigation_bar">
+        <item name="android:background">@color/white</item>
+        <item name="itemIconTint">@drawable/bottom_nav_color</item>
+        <item name="itemTextColor">@drawable/bottom_nav_color</item>
+    </style>
 </resources>

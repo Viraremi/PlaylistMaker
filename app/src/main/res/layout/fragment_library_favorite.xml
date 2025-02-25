@@ -7,7 +7,8 @@
     android:orientation="vertical"
     android:gravity="center|top"
     android:paddingTop="100dp"
-    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentFavorite">
+    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentFavorite"
+    style="@style/secondary_background">
 
     <ImageView
         style="@style/err_img_found"
