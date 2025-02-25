@@ -35,8 +35,6 @@ class LibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.libraryBtnBack.setOnClickListener { findNavController().navigateUp() }
-
         binding.libraryViewPager.adapter = LibraryViewPagerAdapter(
             childFragmentManager, //Очень важный момент для будущей работы с вложенными фрагментами!!!
             lifecycle
