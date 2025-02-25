@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMainBinding
-import com.practicum.playlistmaker.search.ui.activity.SearchActivity
-import com.practicum.playlistmaker.settings.ui.activity.SettingsActivity
+import com.practicum.playlistmaker.search.ui.activity.SearchFragment
 import com.practicum.playlistmaker.library.ui.activity.LibraryActivity
 import com.practicum.playlistmaker.main.ui.model.MainViewState
 import com.practicum.playlistmaker.main.ui.viewModel.MainViewModel
+import com.practicum.playlistmaker.settings.ui.activity.SettingsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
@@ -35,6 +37,13 @@ class MainFragment : Fragment() {
         super.onDestroyView()
     }
 
+    private fun goToFragment(fragment: Fragment){
+        parentFragmentManager.commit {
+            replace(R.id.root_fragment_container, fragment)
+            addToBackStack(null)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getState().observe(viewLifecycleOwner){ state ->
@@ -42,12 +51,8 @@ class MainFragment : Fragment() {
                 MainViewState.LIBRARY -> {
                     LibraryActivity.show(requireContext())
                 }
-                MainViewState.SEARCH -> {
-                    SearchActivity.show(requireContext())
-                }
-                MainViewState.SETTINGS -> {
-                    SettingsActivity.show(requireContext())
-                }
+                MainViewState.SEARCH -> { goToFragment(SearchFragment.newInstance()) }
+                MainViewState.SETTINGS -> { goToFragment(SettingsFragment.newInstance()) }
             }
         }
 
