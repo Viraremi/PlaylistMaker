@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.domain.usecase.GetTracksUseCase
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
+import com.practicum.playlistmaker.util.SingleLiveEvent
 
 class SearchViewModel(
     private val getTracksUseCase: GetTracksUseCase,
@@ -27,7 +28,7 @@ class SearchViewModel(
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val stateRequest = MutableLiveData<SearchState>()
+    private val stateRequest = SingleLiveEvent<SearchState>()
     fun getState(): LiveData<SearchState> = stateRequest
 
     private fun loadData(searchText: String){
