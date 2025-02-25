@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.library.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,8 +13,17 @@ import com.practicum.playlistmaker.databinding.ActivityLibraryBinding
 import com.practicum.playlistmaker.library.ui.model.LibraryViewState
 import com.practicum.playlistmaker.library.ui.viewModel.LibraryViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.contracts.contract
 
 class LibraryActivity : AppCompatActivity() {
+
+    companion object {
+
+        fun show(context: Context){
+            val intent = Intent(context, LibraryActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
 
     val viewModel by viewModel<LibraryViewModel>()
 

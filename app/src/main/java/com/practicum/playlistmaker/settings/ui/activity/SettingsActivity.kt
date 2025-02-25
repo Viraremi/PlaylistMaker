@@ -1,4 +1,6 @@
 package com.practicum.playlistmaker.settings.ui.activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,14 @@ import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
+
+    companion object {
+
+        fun show(context: Context){
+            val intent = Intent(context, SettingsActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
 
     val viewModel by viewModel<SettingsViewModel>()
     lateinit var binding: ActivitySettingsBinding

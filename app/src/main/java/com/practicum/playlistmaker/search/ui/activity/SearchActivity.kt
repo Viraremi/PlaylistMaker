@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.library.ui.activity.LibraryActivity
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
@@ -24,8 +25,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         const val PLAYER_INTENT_KEY = "player_intent_key"
+
+        fun show(context: Context){
+            val intent = Intent(context, SearchActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var binding: ActivitySearchBinding

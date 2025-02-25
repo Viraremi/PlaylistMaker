@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
+import com.practicum.playlistmaker.main.ui.activity.MainFragment
 
 class RootActivity : AppCompatActivity(R.layout.activity_root) {
 
@@ -18,8 +19,10 @@ class RootActivity : AppCompatActivity(R.layout.activity_root) {
             insets
         }
 
-        supportFragmentManager.commit {
-
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                add(R.id.root_fragment_container, MainFragment())
+            }
         }
     }
 }
