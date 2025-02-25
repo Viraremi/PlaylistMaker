@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.settings.ui.model.SettingsState
@@ -12,13 +13,6 @@ import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
-
-    companion object {
-
-        fun newInstance(): Fragment {
-            return SettingsFragment()
-        }
-    }
 
     val viewModel by viewModel<SettingsViewModel>()
     private var _binding: FragmentSettingsBinding? = null
@@ -42,9 +36,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSettingsBack.setOnClickListener{
-            parentFragmentManager.popBackStack()
-        }
+        binding.buttonSettingsBack.setOnClickListener{ findNavController().navigateUp() }
 
         binding.settingsBtnShare.setOnClickListener {
             viewModel.shareApp(getString(R.string.praktikum_url))

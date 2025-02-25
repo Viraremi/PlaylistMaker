@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
@@ -17,13 +19,6 @@ import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-
-    companion object {
-
-        fun newInstance(): Fragment {
-            return SearchFragment()
-        }
-    }
 
     private lateinit var searchResultsAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -62,6 +57,7 @@ class SearchFragment : Fragment() {
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
             if (viewModel.clickDebounce()) {
                 viewModel.addToHistory(track)
+                //findNavController().navigate(R.id.action_searchFragment_to_playerActivity)
                 PlayerActivity.show(requireContext(), viewModel.getTrackId(track)!!)
             }
         }
@@ -70,6 +66,7 @@ class SearchFragment : Fragment() {
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
             if (viewModel.clickDebounce()) {
+                //findNavController().navigate(R.id.action_searchFragment_to_playerActivity)
                 PlayerActivity.show(requireContext(), viewModel.getTrackId(track)!!)
             }
         }
@@ -106,9 +103,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.searchBack.setOnClickListener{
-            parentFragmentManager.popBackStack()
-        }
+        binding.searchBack.setOnClickListener{ findNavController().navigateUp() }
 
         binding.searchErrRefresh.setOnClickListener{
             viewModel.searchDebounce(searchText)
