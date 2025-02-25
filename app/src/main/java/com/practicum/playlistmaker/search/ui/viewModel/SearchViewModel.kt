@@ -70,12 +70,12 @@ class SearchViewModel(
         return history
     }
 
-    fun clear(){
+    fun clearHistory(){
         historyInteractor.clear()
         stateHistory.value = SearchHistoryState.Empty
     }
 
-    fun add(track: Track){
+    fun addToHistory(track: Track){
         historyInteractor.add(track)
     }
 

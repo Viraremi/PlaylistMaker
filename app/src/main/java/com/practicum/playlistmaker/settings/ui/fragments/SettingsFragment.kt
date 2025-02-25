@@ -1,35 +1,39 @@
-package com.practicum.playlistmaker.settings.ui.activity
+package com.practicum.playlistmaker.settings.ui.fragments
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.settings.ui.model.SettingsState
 import com.practicum.playlistmaker.settings.ui.viewModel.SettingsViewModel
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
     val viewModel by viewModel<SettingsViewModel>()
-    lateinit var binding: ActivitySettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding
+        get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_settings)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.buttonSettingsBack.setOnClickListener{
-            finish()
-        }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.settingsBtnShare.setOnClickListener {
             viewModel.shareApp(getString(R.string.praktikum_url))

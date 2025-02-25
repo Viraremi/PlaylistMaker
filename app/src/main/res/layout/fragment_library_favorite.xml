@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center|top"
-    android:paddingTop="100dp">
+    android:paddingTop="100dp"
+    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentFavorite"
+    style="@style/secondary_background">
 
     <ImageView
         style="@style/err_img_found"

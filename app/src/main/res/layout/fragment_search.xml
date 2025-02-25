@@ -5,25 +5,15 @@
     android:id="@+id/main_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.ui.activity.SearchActivity"
-    android:orientation="vertical">
+    tools:context=".search.ui.fragments.SearchFragment"
+    android:orientation="vertical"
+    style="@style/secondary_background">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            style="@style/back_button_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/search_back"
-            android:src="@drawable/arrowback"/>
-
-        <TextView
-            style="@style/sec_menu_header"
-            android:text="@string/search" />
-    </LinearLayout>
+        style="@style/sec_menu_header"
+        android:text="@string/search" />
 
     <LinearLayout
         android:layout_width="match_parent"

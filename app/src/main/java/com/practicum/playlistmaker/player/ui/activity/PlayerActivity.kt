@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,11 +13,21 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
-import com.practicum.playlistmaker.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
+
+    companion object {
+        private const val PLAYER_INTENT_KEY = "player_intent_key"
+
+
+        fun show(context: Context, trackId: Int) {
+            val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra(PLAYER_INTENT_KEY, trackId)
+            context.startActivity(intent)
+        }
+    }
 
     private lateinit var binding: ActivityPlayerBinding
     val viewModel by viewModel<PlayerViewModel>()
@@ -36,7 +48,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
 
-        val trackId = intent.getIntExtra(SearchActivity.PLAYER_INTENT_KEY, -1)
+        val trackId = intent.getIntExtra(PLAYER_INTENT_KEY, -1)
         val track = viewModel.getTrackById(trackId)
         Glide.with(this)
             .load(track.getCoverArtwork())
