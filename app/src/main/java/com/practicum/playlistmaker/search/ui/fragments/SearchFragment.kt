@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
@@ -55,8 +57,7 @@ class SearchFragment : Fragment() {
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
             if (viewModel.clickDebounce()) {
                 viewModel.addToHistory(track)
-                //findNavController().navigate(R.id.action_searchFragment_to_playerActivity)
-                PlayerActivity.show(requireContext(), viewModel.getTrackId(track)!!)
+                goToPlayer(viewModel.getTrackId(track)!!)
             }
         }
         binding.searchResultRecycler.adapter = searchResultsAdapter
@@ -64,8 +65,7 @@ class SearchFragment : Fragment() {
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
             if (viewModel.clickDebounce()) {
-                //findNavController().navigate(R.id.action_searchFragment_to_playerActivity)
-                PlayerActivity.show(requireContext(), viewModel.getTrackId(track)!!)
+                goToPlayer(viewModel.getTrackId(track)!!)
             }
         }
         historyAdapter.notifyDataSetChanged()
@@ -98,6 +98,11 @@ class SearchFragment : Fragment() {
                 is SearchHistoryState.HasValue -> showHistory()
             }
         }
+    }
+
+    private fun goToPlayer(trackId: Int){
+        val bundle = Bundle().apply { putInt(PlayerActivity.TRACK_ID, trackId) }
+        findNavController().navigate(R.id.action_searchFragment_to_playerActivity, bundle)
     }
 
     private fun initListeners() {
