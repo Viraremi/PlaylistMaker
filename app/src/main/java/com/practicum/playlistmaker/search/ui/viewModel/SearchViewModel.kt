@@ -32,26 +32,26 @@ class SearchViewModel(
     private fun loadData(searchText: String){
         if (searchText.isNotEmpty()){
             stateRequest.value = SearchState.Loading
-            getTracksUseCase.execute(
-                searchText = searchText,
-                consumer = object : Consumer<List<Track>> {
-                    override fun consume(data: ConsumerData<List<Track>>) {
-                        when (data) {
-                            is ConsumerData.Data -> {
-                                if (data.value.isEmpty()) {
-                                    stateRequest.postValue(SearchState.EmptyError(""))
-                                } else {
-                                    stateRequest.postValue(SearchState.Content(data.value))
-                                }
-                            }
-
-                            is ConsumerData.Error -> {
-                                stateRequest.postValue(SearchState.ConnectionError(data.msg))
-                            }
-                        }
-                    }
+            viewModelScope.launch {
+                getTracksUseCase.execute(searchText).collect { data ->
+                    processResult(data.first, data.second)
                 }
-            )
+            }
+        }
+    }
+
+    private fun processResult(tracks: List<Track>?, errorMessage: String?) {
+        when {
+            tracks != null -> {
+                if (tracks.isEmpty()) {
+                    stateRequest.postValue(SearchState.EmptyError(""))
+                } else {
+                    stateRequest.postValue(SearchState.Content(tracks))
+                }
+            }
+            errorMessage != null -> {
+                stateRequest.postValue(SearchState.ConnectionError(errorMessage))
+            }
         }
     }
 

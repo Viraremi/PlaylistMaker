@@ -6,13 +6,12 @@ class ITunesRetrofitNetworkClientImpl(
     private val tracksAPI: ITunesAPI
 ): ITunesNetworkClient {
 
-    override fun getTracks(currency: String): NetworkResponse {
+    override suspend fun getTracks(currency: String): NetworkResponse {
         return try {
-            val response = tracksAPI.getTrack(currency).execute()
-            val networkResponse = response.body() ?: NetworkResponse()
-            networkResponse.apply { resultCode = response.code() }
+            val response = tracksAPI.getTrack(currency)
+            response.apply { resultCode = 200 }
         } catch (ex: Exception){
-            NetworkResponse().apply { resultCode = -1 }
+            NetworkResponse().apply { resultCode = 500 }
         }
     }
 }
