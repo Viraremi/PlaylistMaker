@@ -58,15 +58,17 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.getStatePlayerView().observe(this){ state ->
-            when(state){
-                is PlayerViewState.Pause, PlayerViewState.Prepare -> {
-                    binding.playerBtnPlay.setImageResource(R.drawable.button_play)
-                }
-                is PlayerViewState.Play -> {
-                    binding.playerCurrentTime.text = state.data
-                    binding.playerBtnPlay.setImageResource(R.drawable.button_pause)
-                }
-            }
+            binding.playerBtnPlay.isEnabled = state.isPlayButtonEnabled
+            setPlayButtonIcon(state.buttonType)
+            binding.playerCurrentTime.text = state.progress
+        }
+    }
+
+    private fun setPlayButtonIcon(iconType: Boolean) {
+        if (iconType) {
+            binding.playerBtnPlay.setImageResource(R.drawable.button_play)
+        } else {
+            binding.playerBtnPlay.setImageResource(R.drawable.button_pause)
         }
     }
 
