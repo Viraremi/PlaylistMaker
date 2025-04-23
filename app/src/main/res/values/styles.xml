@@ -33,6 +33,10 @@
         <item name="android:textSize">@dimen/secondary_text_size</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="settings_switch" parent="settings_button_text">
+        <item name="trackTint">@color/light_gray</item>
+        <item name="thumbTint">@color/gray</item>
+    </style>
     <style name="secondary_button_icon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>

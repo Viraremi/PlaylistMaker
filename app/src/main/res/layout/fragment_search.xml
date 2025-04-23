@@ -42,7 +42,8 @@
             android:maxLength="50"
             android:inputType="text"
             android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/search_cursor"/>
 
         <ImageView
             style="@style/search_icon"
