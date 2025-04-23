@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
@@ -16,9 +17,14 @@ import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
+import com.practicum.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
     private lateinit var searchResultsAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -26,6 +32,7 @@ class SearchFragment : Fragment() {
     private var searchText = ""
     private var searchResultsAdapterList = mutableListOf<Track>()
     private var historyAdapterList = mutableListOf<Track>()
+    private lateinit var onClickDebounce: (Int) -> Unit
 
     val viewModel by viewModel<SearchViewModel>()
 
@@ -50,23 +57,28 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        onClickDebounce = debounce<Int>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { trackId ->
+            val bundle = Bundle().apply { putInt(PlayerActivity.TRACK_ID, trackId) }
+            findNavController().navigate(R.id.action_searchFragment_to_playerActivity, bundle)
+        }
+
         historyAdapterList.addAll(viewModel.getHistory())
 
         initListeners()
 
         searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
-            if (viewModel.clickDebounce()) {
-                viewModel.addToHistory(track)
-                goToPlayer(viewModel.getTrackId(track)!!)
-            }
+            viewModel.addToHistory(track)
+            onClickDebounce(viewModel.getTrackId(track)!!)
         }
         binding.searchResultRecycler.adapter = searchResultsAdapter
         binding.searchResultRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         historyAdapter = TrackAdapter(historyAdapterList) { track ->
-            if (viewModel.clickDebounce()) {
-                goToPlayer(viewModel.getTrackId(track)!!)
-            }
+            onClickDebounce(viewModel.getTrackId(track)!!)
         }
         historyAdapter.notifyDataSetChanged()
         binding.searchHistoryRecycler.adapter = historyAdapter
@@ -98,11 +110,6 @@ class SearchFragment : Fragment() {
                 is SearchHistoryState.HasValue -> showHistory()
             }
         }
-    }
-
-    private fun goToPlayer(trackId: Int){
-        val bundle = Bundle().apply { putInt(PlayerActivity.TRACK_ID, trackId) }
-        findNavController().navigate(R.id.action_searchFragment_to_playerActivity, bundle)
     }
 
     private fun initListeners() {

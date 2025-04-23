@@ -1,11 +1,9 @@
 package com.practicum.playlistmaker.search.ui.viewModel
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.domain.api.InteractorHistory
 import com.practicum.playlistmaker.search.domain.consumer.Consumer
 import com.practicum.playlistmaker.search.domain.consumer.ConsumerData
@@ -14,6 +12,10 @@ import com.practicum.playlistmaker.search.domain.usecase.GetTracksUseCase
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.util.SingleLiveEvent
+import com.practicum.playlistmaker.util.debounce
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val getTracksUseCase: GetTracksUseCase,
@@ -21,12 +23,8 @@ class SearchViewModel(
 ): ViewModel() {
 
     companion object {
-        private const val REQUECT_KEY = "REQUEST_KEY"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateRequest = SingleLiveEvent<SearchState>()
     fun getState(): LiveData<SearchState> = stateRequest
@@ -84,24 +82,16 @@ class SearchViewModel(
         return historyInteractor.getIdByTrack(track)
     }
 
-    fun searchDebounce(searchText: String){
-        handler.removeCallbacksAndMessages(REQUECT_KEY)
-        val searchRunnable = Runnable { loadData(searchText) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            REQUECT_KEY,
-            postTime,
-        )
+    private val onSearchDebounce = debounce<String>(
+        SEARCH_DEBOUNCE_DELAY,
+        viewModelScope,
+        true
+    ) { searchText ->
+        loadData(searchText)
     }
 
-    private var isClickAllowed = true
-    fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
+    private var searchJob: Job? = null
+    fun searchDebounce(searchText: String){
+        onSearchDebounce(searchText)
     }
 }
