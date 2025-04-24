@@ -1,15 +1,17 @@
 package com.practicum.playlistmaker.player.ui.viewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.api.InteractorPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.search.domain.api.InteractorHistory
 import com.practicum.playlistmaker.search.domain.model.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     val interactorPlayer: InteractorPlayer,
@@ -21,7 +23,7 @@ class PlayerViewModel(
         private const val TOKEN_TIMER = "TIMER"
     }
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
 
     private val statePlayerView = MutableLiveData<PlayerViewState>()
     fun getStatePlayerView(): LiveData<PlayerViewState> = statePlayerView
@@ -30,8 +32,8 @@ class PlayerViewModel(
         interactorPlayer.prepare(
             url = url,
             onComplete = {
-                statePlayerView.value = PlayerViewState.Prepare
-                handler.removeCallbacksAndMessages(TOKEN_TIMER)
+                statePlayerView.value = PlayerViewState.Prepared()
+                timerJob?.cancel()
             }
         )
     }
@@ -44,30 +46,29 @@ class PlayerViewModel(
         }
     }
 
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (interactorPlayer.getPlayerState() == PlayerState.PLAYING) {
+                delay(300L)
+                statePlayerView.postValue(PlayerViewState.Playing(interactorPlayer.getPosition()))
+            }
+        }
+    }
+
     fun play(){
         interactorPlayer.play()
-        handler.removeCallbacksAndMessages(TOKEN_TIMER)
-        handler.postDelayed(
-            object : Runnable {
-                override fun run() {
-                    statePlayerView.value = PlayerViewState.Play(interactorPlayer.getPosition())
-                    handler.postDelayed(this, TOKEN_TIMER, DELAY)
-                }
-            },
-            TOKEN_TIMER,
-            DELAY
-        )
+        startTimer()
     }
 
     fun pause(){
         interactorPlayer.pause()
-        statePlayerView.value = PlayerViewState.Pause
-        handler.removeCallbacksAndMessages(TOKEN_TIMER)
+        timerJob?.cancel()
+        statePlayerView.value = PlayerViewState.Paused(interactorPlayer.getPosition())
     }
 
     fun release(){
         interactorPlayer.release()
-        handler.removeCallbacksAndMessages(TOKEN_TIMER)
+        statePlayerView.value = PlayerViewState.Default()
     }
 
     fun getTrackById(index: Int): Track{

@@ -1,27 +1,22 @@
 package com.practicum.playlistmaker.search.domain.usecase
 
-import com.practicum.playlistmaker.search.domain.consumer.Consumer
 import com.practicum.playlistmaker.search.domain.api.RepositoryNetwork
-import com.practicum.playlistmaker.search.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Resource
 import com.practicum.playlistmaker.search.domain.model.Track
-import java.util.concurrent.Executors
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class GetTracksUseCase(
     private val repository: RepositoryNetwork
 ) {
-    private val executor = Executors.newSingleThreadExecutor()
-
-    fun execute(searchText: String, consumer: Consumer<List<Track>>){
-        executor.execute{
-            val tracksResource = repository.getTracks(searchText)
-            when (tracksResource){
-                is Resource.Error -> {
-                    consumer.consume(ConsumerData.Error("Сетевая ошибка consumer"))
-                }
-
+    fun execute(searchText: String): Flow<Pair<List<Track>?, String?>> {
+        return repository.getTracks(searchText).map { result ->
+            when(result) {
                 is Resource.Success -> {
-                    consumer.consume(ConsumerData.Data(tracksResource.data))
+                    Pair(result.data, null)
+                }
+                is Resource.Error -> {
+                    Pair(null, result.msg)
                 }
             }
         }

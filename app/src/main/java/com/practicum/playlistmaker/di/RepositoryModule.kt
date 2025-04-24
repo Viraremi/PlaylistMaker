@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.google.gson.Gson
 import com.practicum.playlistmaker.player.data.RepositoryPlayerImpl
 import com.practicum.playlistmaker.player.domain.api.RepositoryPlayer
@@ -33,8 +34,12 @@ val repositoryModule = module {
         RepositoryNetworkRetrofitImpl(get())
     }
 
+    single { MediaPlayer() }
+
     single<RepositoryPlayer> {
-        RepositoryPlayerImpl()
+        RepositoryPlayerImpl(
+            get()
+        )
     }
 
     single<RepositorySettings> {
