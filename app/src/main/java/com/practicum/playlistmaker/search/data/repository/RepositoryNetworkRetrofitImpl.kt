@@ -20,6 +20,7 @@ class RepositoryNetworkRetrofitImpl(
                 with(tracksResponse as ResponseTracks){
                     val tracks = tracksResponse.foundTracks.map{
                         Track(
+                            it.trackId,
                             it.trackName,
                             it.artistName,
                             it.trackTimeMillis,

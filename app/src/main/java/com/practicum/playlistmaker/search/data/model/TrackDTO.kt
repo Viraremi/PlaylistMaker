@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.data.model
 
 data class TrackDTO(
+    val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
     val trackTimeMillis: String, // Продолжительность трека
