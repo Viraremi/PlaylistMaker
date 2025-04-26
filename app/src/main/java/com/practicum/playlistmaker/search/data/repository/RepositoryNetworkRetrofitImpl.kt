@@ -6,8 +6,10 @@ import com.practicum.playlistmaker.search.data.network.ITunesNetworkClient
 import com.practicum.playlistmaker.search.domain.api.RepositoryNetwork
 import com.practicum.playlistmaker.search.domain.model.Resource
 import com.practicum.playlistmaker.search.domain.model.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RepositoryNetworkRetrofitImpl(
     private val networkClient: ITunesNetworkClient,
@@ -46,5 +48,5 @@ class RepositoryNetworkRetrofitImpl(
                 emit(Resource.Error("Network error"))
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
