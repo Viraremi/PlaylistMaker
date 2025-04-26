@@ -30,12 +30,11 @@ class PlayerViewModel(
 
     fun onClickFavorite(track: Track){
         viewModelScope.launch {
-            if (track.isFavorite) {
-                stateFavorite.postValue(!track.isFavorite)
+            if (stateFavorite.value == true) {
+                stateFavorite.postValue(false)
                 interactorFavorite.deleteFromFavorite(track)
-            }
-            else {
-                stateFavorite.postValue(!track.isFavorite)
+            } else {
+                stateFavorite.postValue(true)
                 interactorFavorite.addToFavorite(track)
             }
         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -88,13 +89,13 @@ class FragmentFavorite : Fragment() {
     }
 
     private fun showErrorEmpty() {
-        binding.favoriteRecycler.visibility = View.GONE
-        binding.favoriteErrEmpty.visibility = View.VISIBLE
+        binding.favoriteRecycler.isVisible = false
+        binding.favoriteErrEmpty.isVisible = true
     }
 
     private fun showContent(tracks: List<Track>) {
-        binding.favoriteRecycler.visibility = View.VISIBLE
-        binding.favoriteErrEmpty.visibility = View.GONE
+        binding.favoriteRecycler.isVisible = true
+        binding.favoriteErrEmpty.isVisible = false
 
         favoriteList.clear()
         favoriteList.addAll(tracks)

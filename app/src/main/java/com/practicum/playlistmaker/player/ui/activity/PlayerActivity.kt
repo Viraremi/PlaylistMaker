@@ -69,7 +69,6 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.playerBtnLikeIco.setOnClickListener {
-            track.isFavorite = !track.isFavorite
             viewModel.onClickFavorite(track)
         }
 
