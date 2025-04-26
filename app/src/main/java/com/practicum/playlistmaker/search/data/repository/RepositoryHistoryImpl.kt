@@ -3,14 +3,12 @@ package com.practicum.playlistmaker.search.data.repository
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.library.data.db.AppDB
 import com.practicum.playlistmaker.search.domain.api.RepositoryHistory
 import com.practicum.playlistmaker.search.domain.model.Track
 
 class RepositoryHistoryImpl(
     private val sharedPref: SharedPreferences,
-    private val gson: Gson,
-    private val db: AppDB
+    private val gson: Gson
 ) : RepositoryHistory {
 
     companion object{
@@ -23,10 +21,6 @@ class RepositoryHistoryImpl(
     init{
         val json = sharedPref.getString(TRACKS_KEY, null)
         history = gson.fromJson(json, object : TypeToken<MutableList<Track>>() {}.type) ?: mutableListOf<Track>()
-        val favoritesIDs = db.favoriteDao().getIDsFavorite()
-        history.map { track ->
-            track.isFavorite = track.trackId in favoritesIDs
-        }
     }
 
     override fun getHistory(): MutableList<Track> {

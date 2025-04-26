@@ -36,7 +36,8 @@ class FragmentFavorite : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when(state) {
-                FragmentFavoriteState.EMPTY -> showErrorEmpty()
+                FragmentFavoriteState.Empty -> showErrorEmpty()
+                is FragmentFavoriteState.Content -> TODO()
             }
         }
     }

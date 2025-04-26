@@ -28,7 +28,6 @@ val repositoryModule = module {
     single<RepositoryHistory> {
         RepositoryHistoryImpl(
             androidContext().getSharedPreferences(SP_SEARCH_HISTORY, Context.MODE_PRIVATE),
-            get(),
             get()
         )
     }

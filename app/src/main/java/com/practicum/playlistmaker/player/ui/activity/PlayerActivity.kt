@@ -57,10 +57,23 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+        binding.playerBtnLike.setOnClickListener {
+            viewModel.onClickFavorite(track)
+        }
+
         viewModel.getStatePlayerView().observe(this){ state ->
             binding.playerBtnPlay.isEnabled = state.isPlayButtonEnabled
             setPlayButtonIcon(state.buttonType)
             binding.playerCurrentTime.text = state.progress
+        }
+
+        viewModel.getStateFavorite().observe(this){ state ->
+            if (state) {
+                //binding.playerBtnLike.setImageResource()
+            }
+            else {
+                //binding.playerBtnLike.setImageResource()
+            }
         }
     }
 
