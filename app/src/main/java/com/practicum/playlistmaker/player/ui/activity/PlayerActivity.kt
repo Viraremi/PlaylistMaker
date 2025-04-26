@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -69,10 +68,10 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.getStateFavorite().observe(this){ state ->
             if (state) {
-                //binding.playerBtnLike.setImageResource()
+                binding.playerBtnLike.setImageResource(R.drawable.button_like_active)
             }
             else {
-                //binding.playerBtnLike.setImageResource()
+                binding.playerBtnLike.setImageResource(R.drawable.button_like)
             }
         }
     }
