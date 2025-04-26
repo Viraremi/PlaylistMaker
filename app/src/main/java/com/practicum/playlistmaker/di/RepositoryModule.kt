@@ -3,6 +3,8 @@ package com.practicum.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.google.gson.Gson
+import com.practicum.playlistmaker.library.data.repository.RepositoryFavoriteImpl
+import com.practicum.playlistmaker.library.domain.api.RepositoryFavorite
 import com.practicum.playlistmaker.player.data.RepositoryPlayerImpl
 import com.practicum.playlistmaker.player.domain.api.RepositoryPlayer
 import com.practicum.playlistmaker.search.data.repository.RepositoryHistoryImpl
@@ -50,5 +52,9 @@ val repositoryModule = module {
 
     single<RepositorySharing> {
         RepositorySharingImpl(androidContext())
+    }
+
+    single<RepositoryFavorite> {
+        RepositoryFavoriteImpl(get(), get())
     }
 }

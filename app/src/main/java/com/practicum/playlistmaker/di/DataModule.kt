@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.di
 
 import androidx.room.Room
 import com.practicum.playlistmaker.library.data.db.AppDB
+import com.practicum.playlistmaker.library.data.db.DBConvertor
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.ITunesNetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesRetrofitNetworkClientImpl
@@ -30,4 +31,6 @@ val dataModule = module {
         Room.databaseBuilder(androidContext(), AppDB::class.java, "playlistmaker_database.db")
             .build()
     }
+
+    factory { DBConvertor() }
 }
