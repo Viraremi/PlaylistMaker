@@ -7,9 +7,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,10 +38,18 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playerBack.setOnClickListener{ onBackPressedDispatcher.onBackPressed() }
 
-        val trackId = intent.getIntExtra(TRACK_ID, -1)
-        val track = viewModel.getTrackById(trackId)
+        var track: Track? = null
+
+        try {
+            val trackId = intent.getIntExtra(TRACK_ID, -1)
+            track = viewModel.getTrackById(trackId)
+        } catch (e: Exception) {
+            val json = intent.getStringExtra(TRACK_ID)
+            track = Gson().fromJson(json, object : TypeToken<Track>() {}.type)
+        }
+
         Glide.with(this)
-            .load(track.getCoverArtwork())
+            .load(track!!.getCoverArtwork())
             .centerCrop()
             .placeholder(R.drawable.placeholder_big)
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.player_art_corner_radius)))
@@ -50,13 +61,14 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerTrackYearValue.text = track.releaseDate.substring(0, 4)
         binding.playerTrackGenreValue.text = track.primaryGenreName
         binding.playerTrackCountryValue.text = track.country
+        setFavoriteButtonIcon(track.isFavorite)
         viewModel.prepare(track.previewUrl)
 
         binding.playerBtnPlay.setOnClickListener{
             viewModel.playbackControl()
         }
 
-        binding.playerBtnLike.setOnClickListener {
+        binding.playerBtnLikeIco.setOnClickListener {
             viewModel.onClickFavorite(track)
         }
 
@@ -67,12 +79,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.getStateFavorite().observe(this){ state ->
-            if (state) {
-                binding.playerBtnLike.setImageResource(R.drawable.button_like_active)
-            }
-            else {
-                binding.playerBtnLike.setImageResource(R.drawable.button_like)
-            }
+            setFavoriteButtonIcon(state)
         }
     }
 
@@ -81,6 +88,15 @@ class PlayerActivity : AppCompatActivity() {
             binding.playerBtnPlay.setImageResource(R.drawable.button_play)
         } else {
             binding.playerBtnPlay.setImageResource(R.drawable.button_pause)
+        }
+    }
+
+    private fun setFavoriteButtonIcon(iconType: Boolean) {
+        if (iconType) {
+            binding.playerBtnLikeIco.setImageResource(R.drawable.button_like_active)
+        }
+        else {
+            binding.playerBtnLikeIco.setImageResource(R.drawable.button_like)
         }
     }
 

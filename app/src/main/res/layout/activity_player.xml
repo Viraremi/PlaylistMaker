@@ -136,6 +136,7 @@
             app:layout_constraintTop_toTopOf="@id/player_btn_play"/>
 
         <ImageView
+            android:id="@+id/player_btn_like_ico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/button_like"
