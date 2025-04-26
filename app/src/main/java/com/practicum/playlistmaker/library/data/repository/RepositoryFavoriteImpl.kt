@@ -33,6 +33,11 @@ class RepositoryFavoriteImpl(
         emit(convertFromEntity(favorites))
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getIDsFavorite(): Flow<List<Int>> = flow {
+        val favoritesIDs = db.favoriteDao().getIDsFavorite()
+        emit(favoritesIDs)
+    }.flowOn(Dispatchers.IO)
+
     private fun convertFromEntity(tracks: List<TrackEntity>): List<Track>{
         return tracks.map { track -> convertor.map(track) }
     }

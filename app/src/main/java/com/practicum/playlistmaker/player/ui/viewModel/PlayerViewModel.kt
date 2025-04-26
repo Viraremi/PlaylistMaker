@@ -31,12 +31,12 @@ class PlayerViewModel(
     fun onClickFavorite(track: Track){
         viewModelScope.launch {
             if (track.isFavorite) {
-                interactorFavorite.deleteFromFavorite(track)
                 stateFavorite.postValue(!track.isFavorite)
+                interactorFavorite.deleteFromFavorite(track)
             }
             else {
-                interactorFavorite.addToFavorite(track)
                 stateFavorite.postValue(!track.isFavorite)
+                interactorFavorite.addToFavorite(track)
             }
         }
     }
@@ -91,5 +91,13 @@ class PlayerViewModel(
 
     fun getTrackById(index: Int): Track{
         return interactorHistory.getHistory()[index]
+    }
+
+    fun updateFavoriteStatus(track: Track){
+        viewModelScope.launch {
+            interactorFavorite.getIDsFavorite().collect { favorite ->
+                stateFavorite.postValue(track.trackId in favorite)
+            }
+        }
     }
 }

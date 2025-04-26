@@ -20,4 +20,8 @@ class InteractorFavoriteImpl(
     override suspend fun getFavorite(): Flow<List<Track>> {
         return repository.getFavorite()
     }
+
+    override suspend fun getIDsFavorite(): Flow<List<Int>> {
+        return repository.getIDsFavorite()
+    }
 }

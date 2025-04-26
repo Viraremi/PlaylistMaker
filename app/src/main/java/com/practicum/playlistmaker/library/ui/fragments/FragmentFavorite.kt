@@ -77,9 +77,9 @@ class FragmentFavorite : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        favoriteAdapter.notifyDataSetChanged()
+    override fun onStart() {
+        viewModel.getFavorite()
+        super.onStart()
     }
 
     override fun onDestroyView() {
@@ -87,12 +87,12 @@ class FragmentFavorite : Fragment() {
         _binding = null
     }
 
-    fun showErrorEmpty() {
+    private fun showErrorEmpty() {
         binding.favoriteRecycler.visibility = View.GONE
         binding.favoriteErrEmpty.visibility = View.VISIBLE
     }
 
-    fun showContent(tracks: List<Track>) {
+    private fun showContent(tracks: List<Track>) {
         binding.favoriteRecycler.visibility = View.VISIBLE
         binding.favoriteErrEmpty.visibility = View.GONE
 

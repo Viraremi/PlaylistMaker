@@ -48,8 +48,9 @@ class PlayerActivity : AppCompatActivity() {
             track = Gson().fromJson(json, object : TypeToken<Track>() {}.type)
         }
 
+        viewModel.updateFavoriteStatus(track!!)
         Glide.with(this)
-            .load(track!!.getCoverArtwork())
+            .load(track.getCoverArtwork())
             .centerCrop()
             .placeholder(R.drawable.placeholder_big)
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.player_art_corner_radius)))
@@ -61,7 +62,6 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerTrackYearValue.text = track.releaseDate.substring(0, 4)
         binding.playerTrackGenreValue.text = track.primaryGenreName
         binding.playerTrackCountryValue.text = track.country
-        setFavoriteButtonIcon(track.isFavorite)
         viewModel.prepare(track.previewUrl)
 
         binding.playerBtnPlay.setOnClickListener{
@@ -69,6 +69,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.playerBtnLikeIco.setOnClickListener {
+            track.isFavorite = !track.isFavorite
             viewModel.onClickFavorite(track)
         }
 

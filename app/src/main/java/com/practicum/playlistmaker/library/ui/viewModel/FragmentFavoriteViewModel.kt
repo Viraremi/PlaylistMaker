@@ -16,6 +16,10 @@ class FragmentFavoriteViewModel(
     fun getState(): LiveData<FragmentFavoriteState> = state
 
     init {
+        getFavorite()
+    }
+
+    fun getFavorite(){
         viewModelScope.launch {
             interactorFavorite.getFavorite().collect { tracks ->
                 if (tracks.isEmpty()){
