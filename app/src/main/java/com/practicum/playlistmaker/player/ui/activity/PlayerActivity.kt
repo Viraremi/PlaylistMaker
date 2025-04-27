@@ -7,10 +7,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.ui.model.PlayerViewState
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,8 +38,17 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playerBack.setOnClickListener{ onBackPressedDispatcher.onBackPressed() }
 
-        val trackId = intent.getIntExtra(TRACK_ID, -1)
-        val track = viewModel.getTrackById(trackId)
+        var track: Track? = null
+
+        try {
+            val trackId = intent.getIntExtra(TRACK_ID, -1)
+            track = viewModel.getTrackById(trackId)
+        } catch (e: Exception) {
+            val json = intent.getStringExtra(TRACK_ID)
+            track = Gson().fromJson(json, object : TypeToken<Track>() {}.type)
+        }
+
+        viewModel.updateFavoriteStatus(track!!)
         Glide.with(this)
             .load(track.getCoverArtwork())
             .centerCrop()
@@ -57,10 +68,18 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+        binding.playerBtnLikeIco.setOnClickListener {
+            viewModel.onClickFavorite(track)
+        }
+
         viewModel.getStatePlayerView().observe(this){ state ->
             binding.playerBtnPlay.isEnabled = state.isPlayButtonEnabled
             setPlayButtonIcon(state.buttonType)
             binding.playerCurrentTime.text = state.progress
+        }
+
+        viewModel.getStateFavorite().observe(this){ state ->
+            setFavoriteButtonIcon(state)
         }
     }
 
@@ -69,6 +88,15 @@ class PlayerActivity : AppCompatActivity() {
             binding.playerBtnPlay.setImageResource(R.drawable.button_play)
         } else {
             binding.playerBtnPlay.setImageResource(R.drawable.button_pause)
+        }
+    }
+
+    private fun setFavoriteButtonIcon(iconType: Boolean) {
+        if (iconType) {
+            binding.playerBtnLikeIco.setImageResource(R.drawable.button_like_active)
+        }
+        else {
+            binding.playerBtnLikeIco.setImageResource(R.drawable.button_like)
         }
     }
 

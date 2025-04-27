@@ -90,11 +90,21 @@
         <ImageView
             android:id="@+id/player_add_to_list"
             style="@style/player_btn_add_to_list"
+            android:src="@drawable/player_sec_btn_background"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/player_btn_play"
             app:layout_constraintStart_toEndOf="@id/leftGuideline"
             app:layout_constraintTop_toTopOf="@id/player_btn_play"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_add_to_playlist"
+            app:layout_constraintStart_toStartOf="@id/player_add_to_list"
+            app:layout_constraintEnd_toEndOf="@id/player_add_to_list"
+            app:layout_constraintTop_toTopOf="@id/player_add_to_list"
+            app:layout_constraintBottom_toBottomOf="@id/player_add_to_list"/>
 
         <ImageView
             android:id="@+id/player_btn_play"
@@ -120,9 +130,20 @@
             style="@style/player_btn_like"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:src="@drawable/player_sec_btn_background"
             app:layout_constraintBottom_toBottomOf="@id/player_btn_play"
             app:layout_constraintEnd_toStartOf="@id/rightGuideline"
-            app:layout_constraintTop_toTopOf="@id/player_btn_play" />
+            app:layout_constraintTop_toTopOf="@id/player_btn_play"/>
+
+        <ImageView
+            android:id="@+id/player_btn_like_ico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_like"
+            app:layout_constraintStart_toStartOf="@id/player_btn_like"
+            app:layout_constraintEnd_toEndOf="@id/player_btn_like"
+            app:layout_constraintTop_toTopOf="@id/player_btn_like"
+            app:layout_constraintBottom_toBottomOf="@id/player_btn_like"/>
 
         <TextView
             android:id="@+id/player_track_time_title"

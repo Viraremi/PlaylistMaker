@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.library.domain.api.InteractorFavorite
 import com.practicum.playlistmaker.player.domain.api.InteractorPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
@@ -14,13 +15,29 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    val interactorPlayer: InteractorPlayer,
-    val interactorHistory: InteractorHistory
+    private val interactorPlayer: InteractorPlayer,
+    private val interactorHistory: InteractorHistory,
+    private val interactorFavorite: InteractorFavorite
 ) : ViewModel() {
 
     companion object {
         private const val DELAY = 1000L
         private const val TOKEN_TIMER = "TIMER"
+    }
+
+    private val stateFavorite = MutableLiveData<Boolean>()
+    fun getStateFavorite(): LiveData<Boolean> = stateFavorite
+
+    fun onClickFavorite(track: Track){
+        viewModelScope.launch {
+            if (stateFavorite.value == true) {
+                stateFavorite.postValue(false)
+                interactorFavorite.deleteFromFavorite(track)
+            } else {
+                stateFavorite.postValue(true)
+                interactorFavorite.addToFavorite(track)
+            }
+        }
     }
 
     private var timerJob: Job? = null
@@ -73,5 +90,13 @@ class PlayerViewModel(
 
     fun getTrackById(index: Int): Track{
         return interactorHistory.getHistory()[index]
+    }
+
+    fun updateFavoriteStatus(track: Track){
+        viewModelScope.launch {
+            interactorFavorite.getIDsFavorite().collect { favorite ->
+                stateFavorite.postValue(track.trackId in favorite)
+            }
+        }
     }
 }

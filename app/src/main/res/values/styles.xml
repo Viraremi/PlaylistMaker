@@ -139,14 +139,14 @@
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="player_btn_add_to_list">
-        <item name="android:src">@drawable/button_add_to_playlist</item>
+        <item name="tint">@color/black</item>
     </style>
     <style name="player_btn_play">
         <item name="tint">@color/black</item>
         <item name="android:src">@drawable/button_play</item>
     </style>
     <style name="player_btn_like">
-        <item name="android:src">@drawable/button_like</item>
+        <item name="tint">@color/black</item>
     </style>
 
     <style name="library_tabLayout" parent="Widget.Design.TabLayout">
