@@ -2,7 +2,8 @@ package com.practicum.playlistmaker.di
 
 import androidx.room.Room
 import com.practicum.playlistmaker.library.data.db.AppDB
-import com.practicum.playlistmaker.library.data.db.DBConvertor
+import com.practicum.playlistmaker.library.data.db.convertors.PlaylistConvertor
+import com.practicum.playlistmaker.library.data.db.convertors.TrackConvertor
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.ITunesNetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesRetrofitNetworkClientImpl
@@ -32,5 +33,7 @@ val dataModule = module {
             .build()
     }
 
-    factory { DBConvertor() }
+    factory { TrackConvertor() }
+
+    factory { PlaylistConvertor(get()) }
 }
