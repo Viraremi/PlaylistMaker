@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.databinding.FragmentAddPlaylistBinding
@@ -40,14 +41,17 @@ class FragmentNewPlaylist: Fragment() {
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when (state) {
                 FragmentNewPlaylistState.NOTHING -> {
-
+                    //TODO()
                 }
             }
         }
 
         binding.addPlaylistBtnBack.setOnClickListener {
-            (activity as RootActivity).animateBottomNavigationView()
-            findNavController().popBackStack()
+            closeFragment()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            closeFragment()
         }
 
         binding.addPlaylistBtnCreate.setOnClickListener {
@@ -61,17 +65,24 @@ class FragmentNewPlaylist: Fragment() {
                     0
                 )
             )
+
             Toast.makeText(
                 requireContext(),
                 "Плейлист $playlistname создан",
                 Toast.LENGTH_SHORT
             ).show()
-            findNavController().popBackStack()
+
+            closeFragment()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun closeFragment(){
+        (activity as RootActivity).animateBottomNavigationView()
+        findNavController().popBackStack()
     }
 }
