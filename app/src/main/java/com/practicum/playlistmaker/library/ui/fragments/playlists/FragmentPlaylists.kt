@@ -1,13 +1,16 @@
-package com.practicum.playlistmaker.library.ui.fragments
+package com.practicum.playlistmaker.library.ui.fragments.playlists
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryPlaylistsBinding
 import com.practicum.playlistmaker.library.ui.model.FragmentPlaylistState
-import com.practicum.playlistmaker.library.ui.viewModel.FragmentPlaylistViewModel
+import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentPlaylistViewModel
+import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentPlaylists: Fragment() {
@@ -38,6 +41,11 @@ class FragmentPlaylists: Fragment() {
             when(state) {
                 FragmentPlaylistState.EMPTY -> showErrorEmpty()
             }
+        }
+
+        binding.btnCreatePlaylist.setOnClickListener {
+            (activity as RootActivity).animateBottomNavigationView()
+            findNavController().navigate(R.id.action_libraryFragment_to_fragmentNewPlaylist)
         }
     }
 

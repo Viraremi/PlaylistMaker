@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.library.ui.fragments
+package com.practicum.playlistmaker.library.ui.fragments.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
