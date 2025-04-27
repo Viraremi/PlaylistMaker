@@ -78,7 +78,7 @@
         android:id="@+id/add_playlist_TextInputLayout_description"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:hint="Название*"
+        android:hint="Описание"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"
@@ -96,7 +96,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Создать"
-        android:enabled="false"
+        android:enabled="true"
         app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"/>

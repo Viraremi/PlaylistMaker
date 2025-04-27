@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.databinding.FragmentAddPlaylistBinding
+import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentNewPlaylistState
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentNewPlaylistViewModel
 import com.practicum.playlistmaker.util.RootActivity
@@ -45,6 +47,25 @@ class FragmentNewPlaylist: Fragment() {
 
         binding.addPlaylistBtnBack.setOnClickListener {
             (activity as RootActivity).animateBottomNavigationView()
+            findNavController().popBackStack()
+        }
+
+        binding.addPlaylistBtnCreate.setOnClickListener {
+            val playlistname = binding.addPlaylistEdittextName.text.toString()
+            viewModel.createOrUpdatePlaylist(
+                Playlist(
+                    playlistname,
+                    binding.addPlaylistEdittextDescription.text.toString(),
+                    "", //TODO()
+                    listOf<Int>(),
+                    0
+                )
+            )
+            Toast.makeText(
+                requireContext(),
+                "Плейлист $playlistname создан",
+                Toast.LENGTH_SHORT
+            ).show()
             findNavController().popBackStack()
         }
     }
