@@ -47,12 +47,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/add_playlist_btn_back"/>
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/add_playlist_image"
         android:layout_width="0dp"
         android:layout_height="312dp"
         android:background="@drawable/add_playlist_placeholder"
         android:layout_marginTop="24dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/add_playlist_image"
         app:layout_constraintTop_toBottomOf="@id/add_playlist_header"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"/>

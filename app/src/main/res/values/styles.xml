@@ -167,4 +167,9 @@
         <item name="itemIconTint">@drawable/bottom_nav_color</item>
         <item name="itemTextColor">@drawable/bottom_nav_color</item>
     </style>
+
+    <style name="add_playlist_image">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>
