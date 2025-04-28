@@ -45,6 +45,4 @@
             android:text="@string/library_err_empty_playlists"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
-
-
 </LinearLayout>

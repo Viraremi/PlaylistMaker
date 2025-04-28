@@ -21,11 +21,6 @@ class PlayerViewModel(
     private val interactorPlaylist: InteractorPlayer
 ) : ViewModel() {
 
-    companion object {
-        private const val DELAY = 1000L
-        private const val TOKEN_TIMER = "TIMER"
-    }
-
     private val stateFavorite = MutableLiveData<Boolean>()
     fun getStateFavorite(): LiveData<Boolean> = stateFavorite
 

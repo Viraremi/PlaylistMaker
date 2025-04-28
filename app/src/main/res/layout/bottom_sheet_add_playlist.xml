@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Добавить в плейлист"
+        android:text="@string/add_to_playlist"
         android:gravity="center"
         android:paddingVertical="16dp"
 
