@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.player.ui.fragment.PlayerFragment
+import com.practicum.playlistmaker.player.ui.fragment.FragmentPlayer
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
+import com.practicum.playlistmaker.util.RootActivity
 import com.practicum.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,6 +50,11 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        refreshHistory()
+        super.onStart()
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
@@ -62,7 +68,8 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { trackId ->
-            val bundle = Bundle().apply { putInt(PlayerFragment.TRACK_ID, trackId) }
+            (activity as RootActivity).animateBottomNavigationView()
+            val bundle = Bundle().apply { putInt(FragmentPlayer.TRACK_ID, trackId) }
             findNavController().navigate(R.id.action_searchFragment_to_playerFragment, bundle)
         }
 
@@ -124,11 +131,7 @@ class SearchFragment : Fragment() {
             searchResultsAdapter.notifyDataSetChanged()
             binding.searchResultRecycler.visibility = View.GONE
             if (viewModel.getHistory().isNotEmpty()) {
-                //Вот эти строки
-                historyAdapterList.clear()
-                historyAdapterList.addAll(viewModel.getHistory())
-                historyAdapter.notifyDataSetChanged()
-                //При надобности можно будет вынести в отдельную функцию historyRefresh
+                refreshHistory()
             }
             else binding.searchHistory.visibility = View.GONE
         }
@@ -196,5 +199,11 @@ class SearchFragment : Fragment() {
 
     private fun hideHistory(){
         binding.searchHistory.visibility = View.GONE
+    }
+
+    private fun refreshHistory() {
+        historyAdapterList.clear()
+        historyAdapterList.addAll(viewModel.getHistory())
+        historyAdapter.notifyDataSetChanged()
     }
 }

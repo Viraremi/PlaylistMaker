@@ -19,10 +19,11 @@ import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.util.RootActivity
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerFragment : Fragment() {
+class FragmentPlayer : Fragment() {
 
     companion object {
         const val TRACK_ID = "player_intent_key"
@@ -61,11 +62,11 @@ class PlayerFragment : Fragment() {
         }
 
         binding.playerBack.setOnClickListener{
-            findNavController().popBackStack()
+            closeFragment()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().popBackStack()
+            closeFragment()
         }
 
         lateinit var track: Track
@@ -143,6 +144,11 @@ class PlayerFragment : Fragment() {
         _binding = null
         viewModel.release()
         super.onDestroyView()
+    }
+
+    private fun closeFragment(){
+        (activity as RootActivity).animateBottomNavigationView()
+        findNavController().popBackStack()
     }
 
     private fun setPlayButtonIcon(iconType: Boolean) {

@@ -14,9 +14,10 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryFavoriteBinding
 import com.practicum.playlistmaker.library.ui.model.FragmentFavoriteState
 import com.practicum.playlistmaker.library.ui.viewModel.favorite.FragmentFavoriteViewModel
-import com.practicum.playlistmaker.player.ui.fragment.PlayerFragment
+import com.practicum.playlistmaker.player.ui.fragment.FragmentPlayer
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
+import com.practicum.playlistmaker.util.RootActivity
 import com.practicum.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -57,7 +58,8 @@ class FragmentFavorite : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
-            val bundle = Bundle().apply { putString(PlayerFragment.TRACK_ID, Gson().toJson(track)) }
+            (activity as RootActivity).animateBottomNavigationView()
+            val bundle = Bundle().apply { putString(FragmentPlayer.TRACK_ID, Gson().toJson(track)) }
             findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
         }
 
