@@ -12,12 +12,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.domain.model.Playlist
 
-class AddPlaylistAdapter(
+class AddTrackAdapter(
     private val playlists: List<Playlist>
-) : RecyclerView.Adapter<AddPlaylistAdapter.AddPlaylistViewHolder>() {
+) : RecyclerView.Adapter<AddTrackAdapter.AddTrackViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddPlaylistViewHolder {
-        return AddPlaylistViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddTrackViewHolder {
+        return AddTrackViewHolder(
             LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.item_playlist_player, parent, false)
@@ -28,11 +28,11 @@ class AddPlaylistAdapter(
         return playlists.size
     }
 
-    override fun onBindViewHolder(holder: AddPlaylistViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AddTrackViewHolder, position: Int) {
         holder.bind(playlists[position])
     }
 
-    class AddPlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class AddTrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val playlistName: TextView
         val tracksCount: TextView
         val playlistImage: ImageView

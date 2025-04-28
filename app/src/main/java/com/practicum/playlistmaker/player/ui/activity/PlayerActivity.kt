@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -14,6 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.TimeFormatter
@@ -28,6 +30,9 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     val viewModel by viewModel<PlayerViewModel>()
 
+    private lateinit var addTrackAdapterList: List<Playlist>
+    private lateinit var addTrackAdapter: AddTrackAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -38,6 +43,13 @@ class PlayerActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        addTrackAdapterList = viewModel.getPlaylists()
+        addTrackAdapter = AddTrackAdapter(addTrackAdapterList)
+        binding.includedBottomSheet.playerPlaylistRecycler.adapter = addTrackAdapter
+        binding.includedBottomSheet.playerPlaylistRecycler.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -64,7 +76,8 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.playerArt)
         binding.playerTrackName .text = track.trackName
         binding.playerTrackArtist .text = track.artistName
-        binding.playerTrackTimeValue.text = TimeFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
+        binding.playerTrackTimeValue.text =
+            TimeFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
         binding.playerTrackAlbumValue.text = track.collectionName
         binding.playerTrackYearValue.text = track.releaseDate.substring(0, 4)
         binding.playerTrackGenreValue.text = track.primaryGenreName
@@ -97,14 +110,12 @@ class PlayerActivity : AppCompatActivity() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.overlay.isVisible = true
-                    }
-
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.isVisible = false
                     }
-                    else -> { /* none */ }
+                    else -> {
+                        binding.overlay.isVisible = true
+                    }
                 }
             }
 
@@ -137,5 +148,9 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.release()
+    }
+
+    fun setPlaylists(){
+
     }
 }
