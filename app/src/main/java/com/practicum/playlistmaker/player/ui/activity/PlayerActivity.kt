@@ -1,12 +1,15 @@
 package com.practicum.playlistmaker.player.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
@@ -34,6 +37,10 @@ class PlayerActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.playerBack.setOnClickListener{ onBackPressedDispatcher.onBackPressed() }
@@ -72,6 +79,10 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.onClickFavorite(track)
         }
 
+        binding.playerBtnAddToListIco.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
         viewModel.getStatePlayerView().observe(this){ state ->
             binding.playerBtnPlay.isEnabled = state.isPlayButtonEnabled
             setPlayButtonIcon(state.buttonType)
@@ -81,6 +92,24 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getStateFavorite().observe(this){ state ->
             setFavoriteButtonIcon(state)
         }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.overlay.isVisible = true
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                    }
+                    else -> { /* none */ }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) { /* none */ }
+        })
     }
 
     private fun setPlayButtonIcon(iconType: Boolean) {
