@@ -47,11 +47,9 @@ class AddTrackAdapter(
             tracksCount.text = countString(model.tracksCount)
             Glide.with(itemView)
                 .load(model.imgPath)
-                .apply(
-                    RequestOptions()
-                        .placeholder(R.drawable.placeholder_medium)
-                        .transform(RoundedCorners(8))
-                )
+                .placeholder(R.drawable.placeholder_medium)
+                .transform(RoundedCorners(2))
+                .centerCrop()
                 .into(playlistImage)
         }
 
