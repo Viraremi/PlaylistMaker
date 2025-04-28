@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
+import com.practicum.playlistmaker.player.ui.fragment.PlayerFragment
 import com.practicum.playlistmaker.search.ui.model.SearchHistoryState
 import com.practicum.playlistmaker.search.ui.model.SearchState
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
@@ -62,8 +62,8 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { trackId ->
-            val bundle = Bundle().apply { putInt(PlayerActivity.TRACK_ID, trackId) }
-            findNavController().navigate(R.id.action_searchFragment_to_playerActivity, bundle)
+            val bundle = Bundle().apply { putInt(PlayerFragment.TRACK_ID, trackId) }
+            findNavController().navigate(R.id.action_searchFragment_to_playerFragment, bundle)
         }
 
         historyAdapterList.addAll(viewModel.getHistory())

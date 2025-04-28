@@ -1,12 +1,13 @@
-package com.practicum.playlistmaker.player.ui.activity
+package com.practicum.playlistmaker.player.ui.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -14,60 +15,70 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.TimeFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
     companion object {
         const val TRACK_ID = "player_intent_key"
     }
 
-    private lateinit var binding: ActivityPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding
+        get() = _binding!!
+
     val viewModel by viewModel<PlayerViewModel>()
 
     private lateinit var addTrackAdapterList: List<Playlist>
     private lateinit var addTrackAdapter: AddTrackAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_player)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         addTrackAdapterList = viewModel.getPlaylists()
         addTrackAdapter = AddTrackAdapter(addTrackAdapterList)
         binding.includedBottomSheet.playerPlaylistRecycler.adapter = addTrackAdapter
         binding.includedBottomSheet.playerPlaylistRecycler.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        binding.playerBack.setOnClickListener{ onBackPressedDispatcher.onBackPressed() }
+        binding.playerBack.setOnClickListener{
+            findNavController().popBackStack()
+        }
 
-        var track: Track? = null
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
+
+        lateinit var track: Track
 
         try {
-            val trackId = intent.getIntExtra(TRACK_ID, -1)
-            track = viewModel.getTrackById(trackId)
+            val trackId = arguments?.getInt(TRACK_ID, -1)
+            track = viewModel.getTrackById(trackId!!)
         } catch (e: Exception) {
-            val json = intent.getStringExtra(TRACK_ID)
+            val json = arguments?.getString(TRACK_ID)
             track = Gson().fromJson(json, object : TypeToken<Track>() {}.type)
         }
 
-        viewModel.updateFavoriteStatus(track!!)
+        viewModel.updateFavoriteStatus(track)
         Glide.with(this)
             .load(track.getCoverArtwork())
             .centerCrop()
@@ -96,13 +107,13 @@ class PlayerActivity : AppCompatActivity() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
-        viewModel.getStatePlayerView().observe(this){ state ->
+        viewModel.getStatePlayerView().observe(viewLifecycleOwner){ state ->
             binding.playerBtnPlay.isEnabled = state.isPlayButtonEnabled
             setPlayButtonIcon(state.buttonType)
             binding.playerCurrentTime.text = state.progress
         }
 
-        viewModel.getStateFavorite().observe(this){ state ->
+        viewModel.getStateFavorite().observe(viewLifecycleOwner){ state ->
             setFavoriteButtonIcon(state)
         }
 
@@ -123,6 +134,17 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
+    override fun onPause() {
+        viewModel.pause()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        viewModel.release()
+        super.onDestroyView()
+    }
+
     private fun setPlayButtonIcon(iconType: Boolean) {
         if (iconType) {
             binding.playerBtnPlay.setImageResource(R.drawable.button_play)
@@ -138,19 +160,5 @@ class PlayerActivity : AppCompatActivity() {
         else {
             binding.playerBtnLikeIco.setImageResource(R.drawable.button_like)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.release()
-    }
-
-    fun setPlaylists(){
-
     }
 }
