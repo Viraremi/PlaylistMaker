@@ -16,17 +16,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/library_btn_newPlayList"
-        android:layout_marginBottom="46dp"/>
+        android:layout_marginBottom="16dp"/>
 
-    <ImageView
-        style="@style/err_img_found"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_playlist_recycler"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        style="@style/notification_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/fragment_playlist_err_empty"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/library_err_empty_playlists"
-        android:layout_marginTop="16dp"/>
+        android:orientation="vertical"
+        android:gravity="center|top"
+        android:paddingTop="30dp"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/err_img_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/notification_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/library_err_empty_playlists"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+
 </LinearLayout>

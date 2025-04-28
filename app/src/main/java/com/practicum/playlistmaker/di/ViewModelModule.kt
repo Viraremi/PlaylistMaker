@@ -1,13 +1,12 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.library.ui.viewModel.FragmentFavoriteViewModel
+import com.practicum.playlistmaker.library.ui.viewModel.favorite.FragmentFavoriteViewModel
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentPlaylistViewModel
 import com.practicum.playlistmaker.library.ui.viewModel.LibraryViewModel
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentNewPlaylistViewModel
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.ui.viewModel.SearchViewModel
 import com.practicum.playlistmaker.settings.ui.viewModel.SettingsViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

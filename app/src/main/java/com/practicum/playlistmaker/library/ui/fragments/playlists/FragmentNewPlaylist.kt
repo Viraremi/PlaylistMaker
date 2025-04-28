@@ -87,6 +87,7 @@ class FragmentNewPlaylist: Fragment() {
             }
             viewModel.createOrUpdatePlaylist(
                 Playlist(
+                    0,
                     playlistname,
                     binding.addPlaylistEdittextDescription.text.toString(),
                     image,

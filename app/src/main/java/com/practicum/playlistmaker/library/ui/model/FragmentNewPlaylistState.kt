@@ -4,5 +4,5 @@ import android.net.Uri
 
 interface FragmentNewPlaylistState {
     data object EMPTY: FragmentNewPlaylistState
-    class HAS_IMAGE(val uri: Uri): FragmentNewPlaylistState
+    data class HAS_IMAGE(val uri: Uri): FragmentNewPlaylistState
 }

@@ -10,16 +10,18 @@ class PlaylistConvertor(
 ) {
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
-            name = playlist.name,
-            description = playlist.description,
-            imgPath = playlist.imgPath,
-            tracksList = gson.toJson(playlist.tracksList),
-            tracksCount = playlist.tracksCount
+            playlist.id,
+            playlist.name,
+            playlist.description,
+            playlist.imgPath,
+            gson.toJson(playlist.tracksList),
+            playlist.tracksCount
         )
     }
 
     fun map(playlist: PlaylistEntity): Playlist {
         return Playlist(
+            playlist.id,
             playlist.name,
             playlist.description,
             playlist.imgPath,

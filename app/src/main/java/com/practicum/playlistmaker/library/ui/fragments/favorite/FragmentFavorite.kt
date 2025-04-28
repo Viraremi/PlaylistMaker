@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryFavoriteBinding
 import com.practicum.playlistmaker.library.ui.model.FragmentFavoriteState
-import com.practicum.playlistmaker.library.ui.viewModel.FragmentFavoriteViewModel
+import com.practicum.playlistmaker.library.ui.viewModel.favorite.FragmentFavoriteViewModel
 import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
