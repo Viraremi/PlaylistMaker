@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.library.ui.fragments.playlists
+package com.practicum.playlistmaker.player.ui.activity
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,36 +11,35 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.domain.model.Playlist
-import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.util.TimeFormatter
 
-class PlaylistAdapter(
+class AddPlaylistAdapter(
     private val playlists: List<Playlist>
-) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+) : RecyclerView.Adapter<AddPlaylistAdapter.AddPlaylistViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        return PlaylistViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddPlaylistViewHolder {
+        return AddPlaylistViewHolder(
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.item_playlist, parent, false))
+                .inflate(R.layout.item_playlist_player, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
         return playlists.size
     }
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AddPlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
     }
 
-    class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class AddPlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val playlistName: TextView
         val tracksCount: TextView
         val playlistImage: ImageView
         init {
-            playlistName = itemView.findViewById(R.id.playlist_item_name)
-            tracksCount = itemView.findViewById(R.id.playlist_item_count)
-            playlistImage = itemView.findViewById(R.id.playlist_item_img)
+            playlistName = itemView.findViewById(R.id.player_playlist_name)
+            tracksCount = itemView.findViewById(R.id.player_playlist_count)
+            playlistImage = itemView.findViewById(R.id.player_playlist_img)
         }
 
         fun bind(model: Playlist){

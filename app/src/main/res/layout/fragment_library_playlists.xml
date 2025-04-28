@@ -21,7 +21,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_playlist_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"/>
 
     <LinearLayout
         android:id="@+id/fragment_playlist_err_empty"

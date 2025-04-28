@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val interactorPlayer: InteractorPlayer,
     private val interactorHistory: InteractorHistory,
-    private val interactorFavorite: InteractorFavorite
+    private val interactorFavorite: InteractorFavorite,
+    private val interactorPlaylist: InteractorPlayer
 ) : ViewModel() {
 
     companion object {
