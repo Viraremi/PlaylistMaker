@@ -36,7 +36,11 @@ class RepositoryPlaylistImpl(
 
     override suspend fun updateTracklist(playlistId: Int, trackIdsList: List<Int>) {
         withContext(Dispatchers.IO) {
-            db.playlistDao().updateTrackList(playlistId, convertor.fromTrackListToJson(trackIdsList))
+            db.playlistDao().updateTrackList(
+                playlistId,
+                convertor.fromTrackListToJson(trackIdsList),
+                trackIdsList.size
+            )
         }
     }
 

@@ -34,6 +34,8 @@ class FragmentPlayer : Fragment() {
     private val binding
         get() = _binding!!
 
+    lateinit var track: Track
+
     val viewModel by viewModel<PlayerViewModel>()
 
     private lateinit var addTrackAdapterList: List<Playlist>
@@ -52,7 +54,9 @@ class FragmentPlayer : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         addTrackAdapterList = viewModel.getPlaylists()
-        addTrackAdapter = AddTrackAdapter(addTrackAdapterList)
+        addTrackAdapter = AddTrackAdapter(addTrackAdapterList) { playlist ->
+            viewModel.addTrackToPlaylist(playlist, track)
+        }
         binding.includedBottomSheet.playerPlaylistRecycler.adapter = addTrackAdapter
         binding.includedBottomSheet.playerPlaylistRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -73,8 +77,6 @@ class FragmentPlayer : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             closeFragment()
         }
-
-        lateinit var track: Track
 
         try {
             val trackId = arguments?.getInt(TRACK_ID, -1)

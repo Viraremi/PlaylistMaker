@@ -21,6 +21,8 @@ interface PlaylistsDao {
     @Delete
     fun deletePlaylists(playlist: PlaylistEntity)
 
-    @Query("UPDATE playlists_table SET tracks_list = :trackListJson WHERE id = :playlistId")
-    fun updateTrackList(playlistId: Int, trackListJson: String)
+    @Query("UPDATE playlists_table " +
+            "SET tracks_list = :trackListJson, tracks_count = :tracksCount " +
+            "WHERE id = :playlistId")
+    fun updateTrackList(playlistId: Int, trackListJson: String, tracksCount: Int)
 }

@@ -12,7 +12,8 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.domain.model.Playlist
 
 class AddTrackAdapter(
-    private val playlists: List<Playlist>
+    private val playlists: List<Playlist>,
+    private val click: (Playlist) -> Unit
 ) : RecyclerView.Adapter<AddTrackAdapter.AddTrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddTrackViewHolder {
@@ -29,6 +30,9 @@ class AddTrackAdapter(
 
     override fun onBindViewHolder(holder: AddTrackViewHolder, position: Int) {
         holder.bind(playlists[position])
+        holder.itemView.setOnClickListener {
+            click(playlists[position])
+        }
     }
 
     class AddTrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
