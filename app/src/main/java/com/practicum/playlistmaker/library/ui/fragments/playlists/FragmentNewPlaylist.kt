@@ -108,7 +108,7 @@ class FragmentNewPlaylist: Fragment() {
 
             Toast.makeText(
                 requireContext(),
-                "Плейлист $playlistname создан",
+                requireContext().getString(R.string.playlist_created, playlistname),
                 Toast.LENGTH_SHORT
             ).show()
 
@@ -116,7 +116,7 @@ class FragmentNewPlaylist: Fragment() {
         }
 
         binding.addPlaylistEdittextName.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { /* none */ }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s.toString().isNotBlank().also {
@@ -124,7 +124,7 @@ class FragmentNewPlaylist: Fragment() {
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) { /* none */ }
+            override fun afterTextChanged(s: Editable?) = Unit
         })
     }
 
@@ -144,10 +144,10 @@ class FragmentNewPlaylist: Fragment() {
             || binding.addPlaylistEdittextDescription.text.toString().isNotEmpty()) {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setNegativeButton("Отмена") { _, _ ->  /* none */ }
-                .setPositiveButton("Завершить") { _, _ -> closeFragment() }
+                .setTitle(requireContext().getString(R.string.close_alert_title))
+                .setMessage(requireContext().getString(R.string.close_alert_message))
+                .setNegativeButton(requireContext().getString(R.string.close_alert_negative)) { _, _ ->  /* none */ }
+                .setPositiveButton(requireContext().getString(R.string.close_alert_positive)) { _, _ -> closeFragment() }
                 .show()
         }
         else {

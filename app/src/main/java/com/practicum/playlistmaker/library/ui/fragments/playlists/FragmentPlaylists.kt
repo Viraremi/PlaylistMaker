@@ -19,9 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FragmentPlaylists(): Fragment() {
 
     companion object {
-        fun newInstance() = FragmentPlaylists().apply {
-            arguments = Bundle().apply { /* none */ }
-        }
+        fun newInstance() = FragmentPlaylists()
     }
 
     private val adapterList = mutableListOf<Playlist>()

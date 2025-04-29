@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.domain.model.Playlist
+import com.practicum.playlistmaker.util.StringFormatter
 
 class PlaylistAdapter(
     private val playlists: List<Playlist>
@@ -43,7 +44,7 @@ class PlaylistAdapter(
 
         fun bind(model: Playlist){
             playlistName.text = model.name
-            tracksCount.text = countString(model.tracksCount)
+            tracksCount.text = StringFormatter.countString(model.tracksCount)
             Glide.with(itemView)
                 .load(model.imgPath)
                 .apply(
@@ -52,14 +53,6 @@ class PlaylistAdapter(
                         .transform(RoundedCorners(8))
                 )
                 .into(playlistImage)
-        }
-
-        private fun countString(count: Int): String {
-            return when (count) {
-                1 -> "$count трек"
-                in 2..4 -> "$count трека"
-                else -> "$count треков"
-            }
         }
     }
 }

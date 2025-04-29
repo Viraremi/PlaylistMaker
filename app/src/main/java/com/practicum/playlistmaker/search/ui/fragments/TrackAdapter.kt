@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.util.TimeFormatter
+import com.practicum.playlistmaker.util.StringFormatter
 
 class TrackAdapter(
     private val tracks: List<Track>,
@@ -48,7 +48,7 @@ class TrackAdapter(
         fun bind(model: Track){
             trackName.text = model.trackName
             artistName.text = model.artistName
-            trackTime.text = TimeFormatter.getValidTimeFormat(model.trackTimeMillis.toLong())
+            trackTime.text = StringFormatter.getValidTimeFormat(model.trackTimeMillis.toLong())
             Glide.with(itemView)
                 .load(model.getCoverArtwork())
                 .placeholder(R.drawable.placeholder)

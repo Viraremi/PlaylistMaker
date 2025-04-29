@@ -22,7 +22,7 @@ import com.practicum.playlistmaker.library.ui.fragments.playlists.FragmentNewPla
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.RootActivity
-import com.practicum.playlistmaker.util.TimeFormatter
+import com.practicum.playlistmaker.util.StringFormatter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentPlayer : Fragment() {
@@ -105,7 +105,7 @@ class FragmentPlayer : Fragment() {
         binding.playerTrackName .text = track.trackName
         binding.playerTrackArtist .text = track.artistName
         binding.playerTrackTimeValue.text =
-            TimeFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
+            StringFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
         binding.playerTrackAlbumValue.text = track.collectionName
         binding.playerTrackYearValue.text = track.releaseDate.substring(0, 4)
         binding.playerTrackGenreValue.text = track.primaryGenreName
@@ -148,7 +148,7 @@ class FragmentPlayer : Fragment() {
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) { /* none */ }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
     }
 
@@ -188,7 +188,7 @@ class FragmentPlayer : Fragment() {
     fun msgAddTrackSuccess(playlistName: String) {
         Toast.makeText(
             requireContext(),
-            "Добавлено в плейлист $playlistName",
+            requireContext().getString(R.string.msg_add_track_success, playlistName),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -196,7 +196,7 @@ class FragmentPlayer : Fragment() {
     fun msgAddTrackFail(playlistName: String) {
         Toast.makeText(
             requireContext(),
-            "Трек уже добавлен в плейлист $playlistName",
+            requireContext().getString(R.string.msg_add_track_fail, playlistName),
             Toast.LENGTH_SHORT
         ).show()
     }

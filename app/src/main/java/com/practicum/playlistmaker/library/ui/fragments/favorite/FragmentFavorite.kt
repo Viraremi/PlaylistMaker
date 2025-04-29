@@ -24,9 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FragmentFavorite : Fragment() {
 
     companion object {
-        fun newInstance() = FragmentFavorite().apply {
-            arguments = Bundle().apply { /* none */ }
-        }
+        fun newInstance() = FragmentFavorite()
 
         private const val CLICK_DEBOUNCE_DELAY = 500L
     }
