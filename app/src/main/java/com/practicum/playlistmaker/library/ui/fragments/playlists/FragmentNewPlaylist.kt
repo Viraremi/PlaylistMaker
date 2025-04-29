@@ -90,10 +90,11 @@ class FragmentNewPlaylist: Fragment() {
 
             var image = ""
             val playlistname = binding.addPlaylistEdittextName.text.toString()
+            val filename = playlistname + "_image"
             if (currentImage != null) {
-                saveImageToPrivateStorage(currentImage!!, playlistname + "_image")
+                saveImageToPrivateStorage(currentImage!!, "${playlistname}_image")
                 val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myplaylists")
-                image = File(filePath, playlistname + ".jpg").toUri().toString()
+                image = File(filePath, "$filename.jpg").toUri().toString()
             }
             viewModel.createOrUpdatePlaylist(
                 Playlist(
