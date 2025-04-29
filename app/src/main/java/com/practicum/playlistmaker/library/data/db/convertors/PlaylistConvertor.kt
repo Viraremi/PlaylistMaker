@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.library.domain.model.Playlist
-import com.practicum.playlistmaker.search.domain.model.Track
 
 class PlaylistConvertor(
     private val gson: Gson

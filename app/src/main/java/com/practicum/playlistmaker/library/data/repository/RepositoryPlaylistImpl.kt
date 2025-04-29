@@ -5,7 +5,6 @@ import com.practicum.playlistmaker.library.data.db.convertors.PlaylistConvertor
 import com.practicum.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.library.domain.api.RepositoryPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
-import com.practicum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
