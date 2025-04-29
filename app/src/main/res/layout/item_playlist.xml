@@ -24,13 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Название"
-
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:textSize="12sp"
-        android:textColor="@color/black"
-        android:maxLines="1"
-        android:ellipsize="end"
+        style="@style/playlist_recucler_item_text"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,13 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="0 треков"
-
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:textSize="12sp"
-        android:textColor="@color/black"
-        android:maxLines="1"
-        android:ellipsize="end"
+        style="@style/playlist_recucler_item_text"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
