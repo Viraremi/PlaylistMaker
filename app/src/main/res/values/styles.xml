@@ -213,4 +213,15 @@
     <style name="bottom_sheet_bar">
         <item name="android:backgroundTint">@color/light_gray</item>
     </style>
+
+    <style name="add_playlist_edittext">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxStrokeColor">@color/add_playlist_stroke_color</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="hintTextColor">@color/white_blue</item>
+    </style>
 </resources>

@@ -64,6 +64,8 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:hint="@string/mandatory_name"
+        style="@style/add_playlist_edittext"
+
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"
@@ -72,7 +74,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/add_playlist_edittext_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,6 +84,8 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:hint="@string/description"
+        style="@style/add_playlist_edittext"
+
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"
@@ -89,10 +94,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/add_playlist_edittext_description"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
-    
+
     <TextView
         android:id="@+id/add_playlist_btn_create"
         android:layout_width="0dp"
