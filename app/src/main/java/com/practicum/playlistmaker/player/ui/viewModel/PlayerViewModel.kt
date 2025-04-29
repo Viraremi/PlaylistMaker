@@ -49,10 +49,15 @@ class PlayerViewModel(
         return currentPlaylists
     }
 
-    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+    fun addTrackToPlaylist(playlist: Playlist, track: Track, onComplete: (Boolean) -> Unit) {
+        if (track.trackId in playlist.tracksList) {
+            onComplete(false)
+            return
+        }
         viewModelScope.launch {
             interactorPlaylist.addTrackToPlaylist(playlist, track)
         }
+        onComplete(true)
     }
 
     private val statePlayerView = MutableLiveData<PlayerViewState>()

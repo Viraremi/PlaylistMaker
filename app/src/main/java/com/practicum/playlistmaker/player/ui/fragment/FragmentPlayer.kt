@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -53,9 +54,21 @@ class FragmentPlayer : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         addTrackAdapterList = viewModel.getPlaylists()
         addTrackAdapter = AddTrackAdapter(addTrackAdapterList) { playlist ->
-            viewModel.addTrackToPlaylist(playlist, track)
+            viewModel.addTrackToPlaylist(playlist, track) { result ->
+                if (result) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    msgAddTrackSuccess(playlist.name)
+                }
+                else {
+                    msgAddTrackFail(playlist.name)
+                }
+            }
         }
         binding.includedBottomSheet.playerPlaylistRecycler.adapter = addTrackAdapter
         binding.includedBottomSheet.playerPlaylistRecycler.layoutManager =
@@ -64,10 +77,6 @@ class FragmentPlayer : Fragment() {
         binding.includedBottomSheet.playerBtnCreatePlaylist.setOnClickListener {
             val bundle = Bundle().apply { putBoolean(FragmentNewPlaylist.FROM_PLAYER, true) }
             findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlaylist, bundle)
-        }
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.playerBack.setOnClickListener{
@@ -112,6 +121,7 @@ class FragmentPlayer : Fragment() {
         }
 
         binding.playerBtnAddToListIco.setOnClickListener {
+            refreshPlaylists()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
@@ -173,5 +183,26 @@ class FragmentPlayer : Fragment() {
         else {
             binding.playerBtnLikeIco.setImageResource(R.drawable.button_like)
         }
+    }
+
+    fun msgAddTrackSuccess(playlistName: String) {
+        Toast.makeText(
+            requireContext(),
+            "Добавлено в плейлист $playlistName",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun msgAddTrackFail(playlistName: String) {
+        Toast.makeText(
+            requireContext(),
+            "Трек уже добавлен в плейлист $playlistName",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun refreshPlaylists() {
+        addTrackAdapterList = viewModel.getPlaylists()
+        addTrackAdapter.notifyDataSetChanged()
     }
 }
