@@ -107,7 +107,7 @@
         android:textColor="@color/white"
 
         android:clickable="true"
-        android:enabled="true"
+        android:enabled="false"
 
         android:background="@drawable/add_playlist_btn_selector"
         app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
