@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.library.domain.model.Playlist
+import com.practicum.playlistmaker.search.domain.model.Track
 
 class PlaylistConvertor(
     private val gson: Gson
@@ -28,5 +29,9 @@ class PlaylistConvertor(
             gson.fromJson(playlist.tracksList, object : TypeToken<List<Int>>() {}.type),
             playlist.tracksCount
         )
+    }
+
+    fun fromTrackListToJson(list: List<Int>): String{
+        return gson.toJson(list)
     }
 }

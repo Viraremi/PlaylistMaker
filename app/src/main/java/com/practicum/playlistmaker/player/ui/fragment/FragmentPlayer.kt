@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
+import com.practicum.playlistmaker.library.ui.fragments.playlists.FragmentNewPlaylist
 import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.RootActivity
@@ -56,6 +57,10 @@ class FragmentPlayer : Fragment() {
         binding.includedBottomSheet.playerPlaylistRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
+        binding.includedBottomSheet.playerBtnCreatePlaylist.setOnClickListener {
+            val bundle = Bundle().apply { putBoolean(FragmentNewPlaylist.FROM_PLAYER, true) }
+            findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlaylist, bundle)
+        }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN

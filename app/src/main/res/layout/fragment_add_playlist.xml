@@ -97,7 +97,7 @@
         android:id="@+id/add_playlist_btn_create"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/create"
         android:enabled="true"
         app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"

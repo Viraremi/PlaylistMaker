@@ -29,6 +29,12 @@ import java.io.FileOutputStream
 
 class FragmentNewPlaylist: Fragment() {
 
+    companion object {
+        const val FROM_PLAYER = "player"
+    }
+
+    var isFromPlayer = false
+
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
 
@@ -47,6 +53,9 @@ class FragmentNewPlaylist: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        isFromPlayer = arguments?.getBoolean(FROM_PLAYER) ?: false
+
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when (state) {
                 is FragmentNewPlaylistState.HAS_IMAGE -> {
@@ -111,7 +120,7 @@ class FragmentNewPlaylist: Fragment() {
     }
 
     private fun closeFragment(){
-        (activity as RootActivity).animateBottomNavigationView()
+        if (!isFromPlayer) (activity as RootActivity).animateBottomNavigationView()
         findNavController().popBackStack()
     }
 
