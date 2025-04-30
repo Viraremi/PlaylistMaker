@@ -6,4 +6,9 @@
     tools:context="com.practicum.playlistmaker.library.ui.fragments.playlists.FragmentShowPlaylist"
     android:background="@color/extra_white_blue">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/test_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </ScrollView>
