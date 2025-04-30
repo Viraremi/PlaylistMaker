@@ -7,25 +7,42 @@
     android:orientation="vertical"
     android:gravity="center|top"
     android:paddingTop="24dp"
-    tools:context="com.practicum.playlistmaker.library.ui.fragments.FragmentPlaylists"
+    tools:context="com.practicum.playlistmaker.library.ui.fragments.playlists.FragmentPlaylists"
     style="@style/secondary_background">
     
     <Button
+        android:id="@+id/btn_create_playlist"
         style="@style/search_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/library_btn_newPlayList"
-        android:layout_marginBottom="46dp"/>
+        android:layout_marginBottom="16dp"/>
 
-    <ImageView
-        style="@style/err_img_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        style="@style/notification_text"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_playlist_recycler"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/library_err_empty_playlists"
-        android:layout_marginTop="16dp"/>
+        android:paddingHorizontal="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/fragment_playlist_err_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center|top"
+        android:paddingTop="30dp"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/err_img_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/notification_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/library_err_empty_playlists"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
 </LinearLayout>

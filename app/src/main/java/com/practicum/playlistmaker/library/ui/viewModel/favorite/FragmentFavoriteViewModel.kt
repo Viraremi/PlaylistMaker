@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.library.ui.viewModel
+package com.practicum.playlistmaker.library.ui.viewModel.favorite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

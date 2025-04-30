@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.library.domain.api.InteractorFavorite
+import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
+import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.api.InteractorPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.model.PlayerViewState
@@ -17,13 +19,9 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val interactorPlayer: InteractorPlayer,
     private val interactorHistory: InteractorHistory,
-    private val interactorFavorite: InteractorFavorite
+    private val interactorFavorite: InteractorFavorite,
+    private val interactorPlaylist: InteractorPlaylist
 ) : ViewModel() {
-
-    companion object {
-        private const val DELAY = 1000L
-        private const val TOKEN_TIMER = "TIMER"
-    }
 
     private val stateFavorite = MutableLiveData<Boolean>()
     fun getStateFavorite(): LiveData<Boolean> = stateFavorite
@@ -40,10 +38,32 @@ class PlayerViewModel(
         }
     }
 
-    private var timerJob: Job? = null
+    private val currentPlaylists = mutableListOf<Playlist>()
+    fun getPlaylists(): List<Playlist> {
+        viewModelScope.launch {
+            interactorPlaylist.getPlaylists().collect { playlists ->
+                currentPlaylists.clear()
+                currentPlaylists.addAll(playlists)
+            }
+        }
+        return currentPlaylists
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track, onComplete: (Boolean) -> Unit) {
+        if (track.trackId in playlist.tracksList) {
+            onComplete(false)
+            return
+        }
+        viewModelScope.launch {
+            interactorPlaylist.addTrackToPlaylist(playlist, track)
+        }
+        onComplete(true)
+    }
 
     private val statePlayerView = MutableLiveData<PlayerViewState>()
     fun getStatePlayerView(): LiveData<PlayerViewState> = statePlayerView
+
+    private var timerJob: Job? = null
 
     fun prepare(url: String){
         interactorPlayer.prepare(

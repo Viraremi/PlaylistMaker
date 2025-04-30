@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.library.data.repository
 
 import com.practicum.playlistmaker.library.data.db.AppDB
-import com.practicum.playlistmaker.library.data.db.DBConvertor
+import com.practicum.playlistmaker.library.data.db.convertors.TrackConvertor
 import com.practicum.playlistmaker.library.data.db.entity.TrackEntity
 import com.practicum.playlistmaker.library.domain.api.RepositoryFavorite
 import com.practicum.playlistmaker.search.domain.model.Track
@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class RepositoryFavoriteImpl(
     private val db: AppDB,
-    private val convertor: DBConvertor
+    private val convertor: TrackConvertor
 ): RepositoryFavorite {
 
     override suspend fun addToFavorite(track: Track) {

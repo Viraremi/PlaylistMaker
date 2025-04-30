@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.library.ui.fragments
+package com.practicum.playlistmaker.library.ui.fragments.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,19 +13,18 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryFavoriteBinding
 import com.practicum.playlistmaker.library.ui.model.FragmentFavoriteState
-import com.practicum.playlistmaker.library.ui.viewModel.FragmentFavoriteViewModel
-import com.practicum.playlistmaker.player.ui.activity.PlayerActivity
+import com.practicum.playlistmaker.library.ui.viewModel.favorite.FragmentFavoriteViewModel
+import com.practicum.playlistmaker.player.ui.fragment.FragmentPlayer
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
+import com.practicum.playlistmaker.util.RootActivity
 import com.practicum.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentFavorite : Fragment() {
 
     companion object {
-        fun newInstance() = FragmentFavorite().apply {
-            arguments = Bundle().apply { /* none */ }
-        }
+        fun newInstance() = FragmentFavorite()
 
         private const val CLICK_DEBOUNCE_DELAY = 500L
     }
@@ -57,8 +56,9 @@ class FragmentFavorite : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
-            val bundle = Bundle().apply { putString(PlayerActivity.TRACK_ID, Gson().toJson(track)) }
-            findNavController().navigate(R.id.action_libraryFragment_to_playerActivity, bundle)
+            (activity as RootActivity).animateBottomNavigationView()
+            val bundle = Bundle().apply { putString(FragmentPlayer.TRACK_ID, Gson().toJson(track)) }
+            findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
         }
 
         favoriteAdapter = TrackAdapter(favoriteList) { track ->
