@@ -23,7 +23,10 @@ class FragmentPlaylists(): Fragment() {
     }
 
     private val adapterList = mutableListOf<Playlist>()
-    private val adapter = PlaylistAdapter(adapterList)
+    private val adapter = PlaylistAdapter(adapterList) {
+        (activity as RootActivity).animateBottomNavigationView()
+        findNavController().navigate(R.id.action_libraryFragment_to_fragmentShowPlaylist)
+    }
 
     private var _binding: FragmentLibraryPlaylistsBinding? = null
     private val binding get() = _binding!!
