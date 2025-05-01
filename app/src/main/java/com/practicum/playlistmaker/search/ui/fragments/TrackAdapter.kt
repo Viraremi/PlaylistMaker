@@ -14,7 +14,8 @@ import com.practicum.playlistmaker.util.StringFormatter
 
 class TrackAdapter(
     private val tracks: List<Track>,
-    private val click: (Track) -> Unit
+    private val click: (Track) -> Unit,
+    private val longClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -30,6 +31,10 @@ class TrackAdapter(
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener{
             click(tracks[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            longClick(tracks[position])
+            true
         }
     }
 

@@ -77,16 +77,20 @@ class SearchFragment : Fragment() {
 
         initListeners()
 
-        searchResultsAdapter = TrackAdapter(searchResultsAdapterList) { track ->
-            viewModel.addToHistory(track)
-            onClickDebounce(viewModel.getTrackId(track)!!)
-        }
+        searchResultsAdapter = TrackAdapter(searchResultsAdapterList, longClick = {/**/},
+            click = { track ->
+                viewModel.addToHistory(track)
+                onClickDebounce(viewModel.getTrackId(track)!!)
+            }
+        )
         binding.searchResultRecycler.adapter = searchResultsAdapter
         binding.searchResultRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        historyAdapter = TrackAdapter(historyAdapterList) { track ->
-            onClickDebounce(viewModel.getTrackId(track)!!)
-        }
+        historyAdapter = TrackAdapter(historyAdapterList, longClick = {/**/},
+            click = { track ->
+                onClickDebounce(viewModel.getTrackId(track)!!)
+            }
+        )
         historyAdapter.notifyDataSetChanged()
         binding.searchHistoryRecycler.adapter = historyAdapter
         binding.searchHistoryRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
