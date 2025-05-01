@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
@@ -12,7 +14,8 @@ import com.practicum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.launch
 
 class FragmentShowPlaylistViewModel(
-    private val interactorPlaylist: InteractorPlaylist
+    private val interactorPlaylist: InteractorPlaylist,
+    private val gson: Gson
 ) : ViewModel() {
 
     private val state = MutableLiveData<FragmentShowPlaylistState>()
@@ -29,17 +32,7 @@ class FragmentShowPlaylistViewModel(
         return currentTracks
     }
 
-    init {
-        getPlaylistById(1)
-    }
-
-    fun getPlaylistById(id: Int) {
-        viewModelScope.launch {
-            currentPlaylist = interactorPlaylist.getPlaylistById(id)
-        }
-    }
-
-    fun returnPlaylist(): Playlist{
-        return currentPlaylist!!
+    fun playlistFromJson(json: String): Playlist {
+        return gson.fromJson(json, object : TypeToken<Playlist>() {}.type)
     }
 }

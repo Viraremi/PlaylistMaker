@@ -30,8 +30,4 @@ class InteractorPlaylistImpl(
     override suspend fun getTracksFromPlaylist(playlist: Playlist): Flow<List<Track>> {
         return repository.getSavedTracks(playlist.tracksList)
     }
-
-    override suspend fun getPlaylistById(playlistId: Int): Playlist {
-        return repository.getPlaylistById(playlistId)
-    }
 }

@@ -34,7 +34,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FragmentPlaylistViewModel(get())
+        FragmentPlaylistViewModel(get(), get())
     }
 
     viewModel {
@@ -42,6 +42,6 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FragmentShowPlaylistViewModel(get())
+        FragmentShowPlaylistViewModel(get(), get())
     }
 }

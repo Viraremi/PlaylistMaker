@@ -58,14 +58,6 @@ class RepositoryPlaylistImpl(
         }
     }
 
-    override suspend fun getPlaylistById(playlistId: Int): Playlist {
-        var playlist: PlaylistEntity?
-        withContext(Dispatchers.IO) {
-            playlist = db.playlistDao().getPlayListById(playlistId)
-        }
-        return convertorPlaylist.map(playlist!!)
-    }
-
     private fun convertPlaylistFromEntity(playlists: List<PlaylistEntity>): List<Playlist>{
         return playlists.map { playlist -> convertorPlaylist.map(playlist) }
     }

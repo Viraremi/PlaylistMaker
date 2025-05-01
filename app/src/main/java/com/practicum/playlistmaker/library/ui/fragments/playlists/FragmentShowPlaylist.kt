@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentShowPlaylistBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentShowPlaylistViewModel
-import com.practicum.playlistmaker.player.ui.viewModel.PlayerViewModel
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
 import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,7 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FragmentShowPlaylist : Fragment() {
 
     companion object {
-        const val PLAYLIST_ID = "playlist_id"
+        const val PLAYLIST_JSON = "playlist_id"
     }
 
     val viewModel by viewModel<FragmentShowPlaylistViewModel>()
@@ -42,15 +41,14 @@ class FragmentShowPlaylist : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val playlistId = arguments?.getInt(PLAYLIST_ID)
-        currentPlaylists = viewModel.returnPlaylist()
+        currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             (activity as RootActivity).animateBottomNavigationView()
             findNavController().popBackStack()
         }
 
-        binding.testRecycler.adapter = TrackAdapter(viewModel.getTracks(currentPlaylists)) {/* none */}
+        binding.testRecycler.adapter = TrackAdapter(viewModel.getTracks(currentPlaylists)) {/**/}
         binding.testRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }

@@ -23,7 +23,4 @@ interface PlaylistsDao {
             "SET tracks_list = :trackListJson, tracks_count = :tracksCount " +
             "WHERE id = :playlistId")
     fun updateTrackList(playlistId: Int, trackListJson: String, tracksCount: Int)
-
-    @Query("SELECT * FROM playlists_table WHERE id = :playlistId")
-    fun getPlayListById(playlistId: Int): PlaylistEntity
 }

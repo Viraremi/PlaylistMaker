@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
+import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentPlaylistState
 import kotlinx.coroutines.launch
 
 class FragmentPlaylistViewModel(
-    private val interactor: InteractorPlaylist
+    private val interactor: InteractorPlaylist,
+    private val gson: Gson
 ): ViewModel() {
 
     private val state = MutableLiveData<FragmentPlaylistState>()
@@ -30,5 +33,9 @@ class FragmentPlaylistViewModel(
                 }
             }
         }
+    }
+
+    fun playlistToJson(playlist: Playlist): String {
+        return gson.toJson(playlist)
     }
 }
