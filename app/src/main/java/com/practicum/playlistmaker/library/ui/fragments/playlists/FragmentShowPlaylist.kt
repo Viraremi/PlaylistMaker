@@ -43,8 +43,11 @@ class FragmentShowPlaylist : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            (activity as RootActivity).animateBottomNavigationView()
-            findNavController().popBackStack()
+            closeFragment()
+        }
+
+        binding.showPlaylistBtnBack.setOnClickListener {
+            closeFragment()
         }
 
         currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
@@ -64,11 +67,10 @@ class FragmentShowPlaylist : Fragment() {
                 }
             }
         }
+    }
 
-
-
-//        binding.testRecycler.adapter = TrackAdapter(viewModel.getTracks(currentPlaylists)) {/**/}
-//        binding.testRecycler.layoutManager =
-//            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+    private fun closeFragment(){
+        (activity as RootActivity).animateBottomNavigationView()
+        findNavController().popBackStack()
     }
 }
