@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
@@ -110,6 +109,15 @@ class FragmentShowPlaylist : Fragment() {
                     closeFragment()
                 }
                 .show()
+        }
+
+        binding.includedBottomSheetMenu.bottomSheetMenuBtnEdit.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentShowPlaylist_to_fragmentNewPlaylist,
+                Bundle().apply {
+                    putBoolean(FragmentNewPlaylist.FROM_SECONDARY, true)
+                    putString(FragmentNewPlaylist.PLAYLIST, Gson().toJson(currentPlaylists))
+                }
+            )
         }
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){

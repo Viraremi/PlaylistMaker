@@ -79,7 +79,7 @@ class FragmentPlayer : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.includedBottomSheet.playerBtnCreatePlaylist.setOnClickListener {
-            val bundle = Bundle().apply { putBoolean(FragmentNewPlaylist.FROM_PLAYER, true) }
+            val bundle = Bundle().apply { putBoolean(FragmentNewPlaylist.FROM_SECONDARY, true) }
             findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlaylist, bundle)
         }
 

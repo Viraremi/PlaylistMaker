@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +33,14 @@ import java.io.FileOutputStream
 class FragmentNewPlaylist: Fragment() {
 
     companion object {
-        const val FROM_PLAYER = "player"
+        const val FROM_SECONDARY = "from_sec_screen"
+        const val PLAYLIST = "playlist"
+
+        const val MODE_EDIT = "edit"
+        const val MODE_DEFAULT = "default"
     }
 
+    var mode = MODE_DEFAULT
     var isFromPlayer = false
 
     private var _binding: FragmentAddPlaylistBinding? = null
@@ -51,12 +57,21 @@ class FragmentNewPlaylist: Fragment() {
         return binding.root
     }
 
+    lateinit var currentPlaylist: Playlist
     private var currentImage: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        isFromPlayer = arguments?.getBoolean(FROM_PLAYER) ?: false
+        isFromPlayer = arguments?.getBoolean(FROM_SECONDARY) ?: false
+
+        try {
+            currentPlaylist = viewModel.playlistFromJson(arguments?.getString(PLAYLIST)!!)
+            viewModel.toEditMode(currentPlaylist)
+        }
+        catch (e: Exception) {
+            Log.e("Плейлист не получен", e.toString())
+        }
 
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when (state) {
@@ -70,6 +85,16 @@ class FragmentNewPlaylist: Fragment() {
                         R.drawable.add_playlist_placeholder
                     )
                     currentImage = null
+                }
+                is FragmentNewPlaylistState.EDIT -> {
+                    mode = MODE_EDIT
+                    binding.addPlaylistHeader.text = "Редактировать"
+                    binding.addPlaylistBtnCreate.text = "Сохранить"
+
+                    currentImage = state.playlist.imgPath.toUri()
+                    binding.addPlaylistImage.setImageURI(currentImage)
+                    binding.addPlaylistEdittextName.setText(state.playlist.name)
+                    binding.addPlaylistEdittextDescription.setText(state.playlist.description)
                 }
             }
         }
@@ -96,23 +121,36 @@ class FragmentNewPlaylist: Fragment() {
                 val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myplaylists")
                 image = File(filePath, "$filename.jpg").toUri().toString()
             }
-            viewModel.createOrUpdatePlaylist(
-                Playlist(
-                    0,
-                    playlistname,
-                    binding.addPlaylistEdittextDescription.text.toString(),
-                    image,
-                    listOf<Int>(),
-                    0
-                )
-            )
 
-            Toast.makeText(
-                requireContext(),
-                requireContext().getString(R.string.playlist_created, playlistname),
-                Toast.LENGTH_SHORT
-            ).show()
-
+            when (mode) {
+                MODE_DEFAULT -> {
+                    viewModel.createOrUpdatePlaylist(
+                        Playlist(0,
+                            playlistname,
+                            binding.addPlaylistEdittextDescription.text.toString(),
+                            image,
+                            listOf<Int>(),
+                            0
+                        )
+                    )
+                    Toast.makeText(
+                        requireContext(),
+                        requireContext().getString(R.string.playlist_created, playlistname),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                MODE_EDIT -> {
+                    viewModel.createOrUpdatePlaylist(
+                        Playlist(currentPlaylist.id,
+                            playlistname,
+                            binding.addPlaylistEdittextDescription.text.toString(),
+                            image,
+                            currentPlaylist.tracksList,
+                            currentPlaylist.tracksCount
+                        )
+                    )
+                }
+            }
             closeFragment()
         }
 
@@ -140,9 +178,10 @@ class FragmentNewPlaylist: Fragment() {
     }
 
     private fun closeFragmentWithAlert() {
-        if (viewModel.getState().value is FragmentNewPlaylistState.HAS_IMAGE
+        if ((viewModel.getState().value is FragmentNewPlaylistState.HAS_IMAGE
             || binding.addPlaylistEdittextName.text.toString().isNotEmpty()
-            || binding.addPlaylistEdittextDescription.text.toString().isNotEmpty()) {
+            || binding.addPlaylistEdittextDescription.text.toString().isNotEmpty())
+            && mode == MODE_DEFAULT) {
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(requireContext().getString(R.string.close_alert_title))
