@@ -60,7 +60,14 @@ class RepositoryPlaylistImpl(
 
     override suspend fun deleteSavedTrack(track: Track) {
         withContext(Dispatchers.IO) {
-            db.savedTracksDao().deleteSavedTrack(convertorSavedTracks.map(track))
+            getPlaylists().collect { playlists ->
+                for (item in playlists) {
+                    if (track.trackId in item.tracksList) {
+                        return@collect
+                    }
+                }
+                db.savedTracksDao().deleteSavedTrack(convertorSavedTracks.map(track))
+            }
         }
     }
 

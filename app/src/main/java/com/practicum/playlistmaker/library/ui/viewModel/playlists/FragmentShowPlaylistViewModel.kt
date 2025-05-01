@@ -51,4 +51,11 @@ class FragmentShowPlaylistViewModel(
     private fun getCountString(playlist: Playlist): String{
         return StringFormatter.countString(playlist.tracksCount)
     }
+
+    fun deleteTrackFromPlaylist(playlist: Playlist, track: Track) {
+        viewModelScope.launch {
+            interactorPlaylist.deleteTrackFromPlaylist(playlist, track)
+            loadContent(playlist)
+        }
+    }
 }

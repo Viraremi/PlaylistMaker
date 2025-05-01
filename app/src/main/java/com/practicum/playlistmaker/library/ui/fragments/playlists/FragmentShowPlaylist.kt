@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentShowPlaylistBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentShowPlaylistViewModel
+import com.practicum.playlistmaker.player.ui.fragment.FragmentPlayer
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
 import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,10 +74,15 @@ class FragmentShowPlaylist : Fragment() {
                     binding.includedBottomSheet.bottomSheetTracksListRecycler.adapter =
                         TrackAdapter(state.tracks,
                             click = { track ->
-                                Toast.makeText(context, "Нажатие на ${track.trackName}", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(
+                                    R.id.action_fragmentShowPlaylist_to_playerFragment,
+                                    Bundle().apply {
+                                        putString(FragmentPlayer.TRACK_ID, Gson().toJson(track))
+                                    }
+                                )
                             },
                             longClick = { track ->
-                                Toast.makeText(context, "Долгое нажатие на ${track.trackName}", Toast.LENGTH_SHORT).show()
+                                viewModel.deleteTrackFromPlaylist(currentPlaylists, track)
                             }
                         )
                 }
