@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentShowPlaylistBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
+import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentShowPlaylistViewModel
-import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
 import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,15 +42,33 @@ class FragmentShowPlaylist : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             (activity as RootActivity).animateBottomNavigationView()
             findNavController().popBackStack()
         }
 
-        binding.testRecycler.adapter = TrackAdapter(viewModel.getTracks(currentPlaylists)) {/**/}
-        binding.testRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
+        viewModel.loadContent(currentPlaylists)
+
+        viewModel.getState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is FragmentShowPlaylistState.CONTENT -> {
+                    Glide.with(this)
+                        .load(state.playlist.imgPath)
+                        .placeholder(R.drawable.placeholder_big)
+                        .into(binding.showPlaylistImg)
+                    binding.showPlaylistName.text = state.playlist.name
+                    binding.showPlaylistDescription.text = state.playlist.description
+                    binding.showPlaylistTime.text = state.timeString
+                    binding.showPlaylistCount.text = state.countString
+                }
+            }
+        }
+
+
+
+//        binding.testRecycler.adapter = TrackAdapter(viewModel.getTracks(currentPlaylists)) {/**/}
+//        binding.testRecycler.layoutManager =
+//            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 }

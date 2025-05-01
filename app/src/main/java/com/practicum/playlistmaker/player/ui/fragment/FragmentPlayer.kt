@@ -105,7 +105,7 @@ class FragmentPlayer : Fragment() {
         binding.playerTrackName .text = track.trackName
         binding.playerTrackArtist .text = track.artistName
         binding.playerTrackTimeValue.text =
-            StringFormatter.getValidTimeFormat(track.trackTimeMillis.toLong())
+            StringFormatter.getValidTimeFormat(track.trackTimeMillis)
         binding.playerTrackAlbumValue.text = track.collectionName
         binding.playerTrackYearValue.text = track.releaseDate.substring(0, 4)
         binding.playerTrackGenreValue.text = track.primaryGenreName

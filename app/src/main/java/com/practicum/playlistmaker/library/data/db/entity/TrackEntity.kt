@@ -9,7 +9,7 @@ data class TrackEntity(
     val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
-    val trackTimeMillis: String, // Продолжительность трека
+    val trackTimeMillis: Long, // Продолжительность трека
     val artworkUrl100: String, // Ссылка на изображение обложки
     val collectionName: String, // Альбом
     val releaseDate: String, // Год релиза
