@@ -155,11 +155,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:behavior_hideable="false"
+        app:behavior_peekHeight="266dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include
             layout="@layout/bottom_sheet_tracks_list"
-            android:id="@+id/included_bottom_sheet"
+            android:id="@+id/included_bottom_sheet_tracks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -171,20 +172,21 @@
         android:background="#99000000"
         android:visibility="gone"/>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/show_playlist_bottom_sheet_menu"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="vertical"-->
-<!--        app:behavior_hideable="true"-->
-<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">-->
+    <LinearLayout
+        android:id="@+id/show_playlist_bottom_sheet_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="383dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-<!--        <include-->
-<!--            layout="@layout/bottom_sheet_add_playlist"-->
-<!--            android:id="@+id/included_bottom_sheet"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"/>-->
+        <include
+            layout="@layout/bottom_sheet_menu"
+            android:id="@+id/included_bottom_sheet_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-<!--    </LinearLayout>-->
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

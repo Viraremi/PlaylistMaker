@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
@@ -80,11 +82,36 @@ class FragmentShowPlaylist : Fragment() {
             closeFragment()
         }
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.showPlaylistBottomSheetMenu)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
+
+        binding.showPlaylistBtnMore.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.showPlaylistOverlay.isVisible = false
+                    }
+                    else -> {
+                        binding.showPlaylistOverlay.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+        })
+
         currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
         viewModel.loadContent(currentPlaylists)
 
-        binding.includedBottomSheet.bottomSheetTracksListRecycler.adapter = adapter
-        binding.includedBottomSheet.bottomSheetTracksListRecycler.layoutManager =
+        binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.adapter = adapter
+        binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         viewModel.getState().observe(viewLifecycleOwner) { state ->
