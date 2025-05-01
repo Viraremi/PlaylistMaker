@@ -10,6 +10,7 @@ import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.sharing.domain.api.InteractorSharing
 import com.practicum.playlistmaker.util.StringFormatter
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class FragmentShowPlaylistViewModel(
     private val interactorPlaylist: InteractorPlaylist,
+    private val interactorSharing: InteractorSharing,
     private val gson: Gson
 ) : ViewModel() {
 
@@ -72,5 +74,23 @@ class FragmentShowPlaylistViewModel(
 
             interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
         }
+    }
+
+    var shareMsg = ""
+
+    fun generateMsg(playlist: Playlist, tracks: List<Track>) {
+
+        shareMsg += "Название: ${playlist.name}\n" +
+                "Описание: ${playlist.description}\n" +
+                "${StringFormatter.countString(playlist.tracksCount)}\n"
+
+        tracks.forEachIndexed { index, track ->
+            shareMsg += "${index+1}. ${track.artistName} - ${track.trackName} " +
+                    "(${StringFormatter.getValidTimeFormat(track.trackTimeMillis)})\n"
+        }
+    }
+
+    fun sharePlaylist() {
+        interactorSharing.shareApp(shareMsg)
     }
 }

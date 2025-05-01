@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
@@ -91,6 +92,10 @@ class FragmentShowPlaylist : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
+        binding.showPlaylistBtnShare.setOnClickListener {
+            viewModel.sharePlaylist()
+        }
+
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -126,6 +131,16 @@ class FragmentShowPlaylist : Fragment() {
                     binding.showPlaylistTime.text = state.timeString
                     binding.showPlaylistCount.text = state.countString
                     refreshRecycler(state.tracks)
+                    viewModel.generateMsg(state.playlist, state.tracks)
+
+                    binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistName.text =
+                        state.playlist.name
+                    binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistCount.text =
+                        state.countString
+                    Glide.with(this)
+                        .load(state.playlist.imgPath)
+                        .placeholder(R.drawable.placeholder_medium)
+                        .into(binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistImg)
                 }
             }
         }
