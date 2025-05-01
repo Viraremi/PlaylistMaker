@@ -17,4 +17,6 @@ interface RepositoryPlaylist {
     suspend fun getSavedTracks(trackIDs: List<Int>): Flow<List<Track>>
 
     suspend fun addSavedTrack(track: Track)
+
+    suspend fun deleteSavedTrack(track: Track)
 }

@@ -58,6 +58,12 @@ class RepositoryPlaylistImpl(
         }
     }
 
+    override suspend fun deleteSavedTrack(track: Track) {
+        withContext(Dispatchers.IO) {
+            db.savedTracksDao().deleteSavedTrack(convertorSavedTracks.map(track))
+        }
+    }
+
     private fun convertPlaylistFromEntity(playlists: List<PlaylistEntity>): List<Playlist>{
         return playlists.map { playlist -> convertorPlaylist.map(playlist) }
     }

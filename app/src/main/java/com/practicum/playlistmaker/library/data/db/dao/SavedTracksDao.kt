@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.library.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,4 +15,7 @@ interface SavedTracksDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSavedTrack(track: SavedTracksEntity)
+
+    @Delete
+    fun deleteSavedTrack(track: SavedTracksEntity)
 }
