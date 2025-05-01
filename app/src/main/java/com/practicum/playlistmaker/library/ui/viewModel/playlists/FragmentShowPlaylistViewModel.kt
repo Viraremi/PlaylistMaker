@@ -29,16 +29,22 @@ class FragmentShowPlaylistViewModel(
 
     fun loadContent(playlist: Playlist) {
         viewModelScope.launch {
-            interactorPlaylist.getTracksFromPlaylist(playlist).collect { tracks->
-                state.postValue(
-                    FragmentShowPlaylistState.CONTENT(
-                        playlist,
-                        tracks,
-                        getCountString(playlist),
-                        getTimeString(tracks)
-                    )
-                )
+            val tracks: Deferred<List<Track>> = async(Dispatchers.IO) {
+                var result = listOf<Track>()
+                interactorPlaylist.getTracksFromPlaylist(playlist).collect { tracks ->
+                    result = tracks
+                }
+                return@async result
             }
+
+            state.postValue(
+                FragmentShowPlaylistState.CONTENT(
+                    playlist,
+                    tracks.await(),
+                    getCountString(playlist),
+                    getTimeString(tracks.await())
+                )
+            )
         }
     }
 

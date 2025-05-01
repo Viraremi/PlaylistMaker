@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentNewPlaylistState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentNewPlaylistViewModel(
@@ -27,6 +28,7 @@ class FragmentNewPlaylistViewModel(
     fun createOrUpdatePlaylist(playlist: Playlist) {
         viewModelScope.launch {
             interactor.addPlaylist(playlist)
+            delay(5000L)
         }
     }
 
