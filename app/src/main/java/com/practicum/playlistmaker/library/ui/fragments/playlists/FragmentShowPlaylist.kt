@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentShowPlaylistBinding
@@ -16,6 +17,7 @@ import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentShowPlaylistViewModel
 import com.practicum.playlistmaker.player.ui.fragment.FragmentPlayer
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.fragments.TrackAdapter
 import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,6 +35,30 @@ class FragmentShowPlaylist : Fragment() {
     private var _binding: FragmentShowPlaylistBinding? = null
     private val binding
         get() = _binding!!
+
+    private val adapterList = mutableListOf<Track>()
+    private val adapter = TrackAdapter(adapterList,
+        click = { track ->
+            findNavController().navigate(
+                R.id.action_fragmentShowPlaylist_to_playerFragment,
+                Bundle().apply {
+                    putBoolean(FragmentPlayer.FROM_PLAYLIST, true)
+                    putString(FragmentPlayer.TRACK_ID, Gson().toJson(track))
+                }
+            )
+        },
+        longClick = { track ->
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Удалить трек")
+                .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
+                .setNegativeButton("Отмена") { _, _ ->  /* none */ }
+                .setPositiveButton("Удалить") { _, _ ->
+                    viewModel.deleteTrackFromPlaylist(currentPlaylists, track)
+                    viewModel.loadContent(currentPlaylists)
+                }
+                .show()
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +83,10 @@ class FragmentShowPlaylist : Fragment() {
         currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
         viewModel.loadContent(currentPlaylists)
 
+        binding.includedBottomSheet.bottomSheetTracksListRecycler.adapter = adapter
+        binding.includedBottomSheet.bottomSheetTracksListRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is FragmentShowPlaylistState.CONTENT -> {
@@ -68,31 +98,25 @@ class FragmentShowPlaylist : Fragment() {
                     binding.showPlaylistDescription.text = state.playlist.description
                     binding.showPlaylistTime.text = state.timeString
                     binding.showPlaylistCount.text = state.countString
-
-                    binding.includedBottomSheet.bottomSheetTracksListRecycler.layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    binding.includedBottomSheet.bottomSheetTracksListRecycler.adapter =
-                        TrackAdapter(state.tracks,
-                            click = { track ->
-                                findNavController().navigate(
-                                    R.id.action_fragmentShowPlaylist_to_playerFragment,
-                                    Bundle().apply {
-                                        putBoolean(FragmentPlayer.FROM_PLAYLIST, true)
-                                        putString(FragmentPlayer.TRACK_ID, Gson().toJson(track))
-                                    }
-                                )
-                            },
-                            longClick = { track ->
-                                viewModel.deleteTrackFromPlaylist(currentPlaylists, track)
-                            }
-                        )
+                    refreshRecycler(state.tracks)
                 }
             }
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadContent(currentPlaylists)
+    }
+
     private fun closeFragment(){
         (activity as RootActivity).animateBottomNavigationView()
         findNavController().popBackStack()
+    }
+
+    private fun refreshRecycler(tracks: List<Track>) {
+        adapterList.clear()
+        adapterList.addAll(tracks)
+        adapter.notifyDataSetChanged()
     }
 }

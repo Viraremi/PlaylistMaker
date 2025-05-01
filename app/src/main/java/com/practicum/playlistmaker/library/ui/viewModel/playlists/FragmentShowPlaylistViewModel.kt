@@ -71,7 +71,6 @@ class FragmentShowPlaylistViewModel(
             }
 
             interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
-            loadContent(playlist)
         }
     }
 }
