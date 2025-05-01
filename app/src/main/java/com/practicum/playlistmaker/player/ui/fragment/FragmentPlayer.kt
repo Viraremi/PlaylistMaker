@@ -29,6 +29,7 @@ class FragmentPlayer : Fragment() {
 
     companion object {
         const val TRACK_ID = "player_intent_key"
+        const val FROM_PLAYLIST = "player"
     }
 
     private var _binding: FragmentPlayerBinding? = null
@@ -38,6 +39,7 @@ class FragmentPlayer : Fragment() {
     lateinit var track: Track
 
     val viewModel by viewModel<PlayerViewModel>()
+    var from_playlist = false
 
     private lateinit var addTrackAdapterList: List<Playlist>
     private lateinit var addTrackAdapter: AddTrackAdapter
@@ -53,6 +55,8 @@ class FragmentPlayer : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        from_playlist = arguments?.getBoolean(FROM_PLAYLIST) ?: false
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -164,7 +168,7 @@ class FragmentPlayer : Fragment() {
     }
 
     private fun closeFragment(){
-        (activity as RootActivity).animateBottomNavigationView()
+        if (!from_playlist) (activity as RootActivity).animateBottomNavigationView()
         findNavController().popBackStack()
     }
 

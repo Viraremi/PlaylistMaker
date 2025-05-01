@@ -77,6 +77,7 @@ class FragmentShowPlaylist : Fragment() {
                                 findNavController().navigate(
                                     R.id.action_fragmentShowPlaylist_to_playerFragment,
                                     Bundle().apply {
+                                        putBoolean(FragmentPlayer.FROM_PLAYLIST, true)
                                         putString(FragmentPlayer.TRACK_ID, Gson().toJson(track))
                                     }
                                 )
