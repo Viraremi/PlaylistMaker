@@ -27,43 +27,31 @@
         android:layout_width="match_parent"/>
 
     <TextView
+        style="@style/settings_button_text"
         android:id="@+id/bottom_sheet_menu_btn_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Поделиться"
-
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:text="@string/share_playlist"
 
         android:paddingVertical="21dp"
         android:paddingHorizontal="16dp"/>
 
     <TextView
+        style="@style/settings_button_text"
         android:id="@+id/bottom_sheet_menu_btn_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Редактировать информацию"
-
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:text="@string/edit_playlist"
 
         android:paddingVertical="21dp"
         android:paddingHorizontal="16dp"/>
 
     <TextView
+        style="@style/settings_button_text"
         android:id="@+id/bottom_sheet_menu_btn_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Удалить плейлист"
-
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:text="@string/delete_playlist"
 
         android:paddingVertical="21dp"
         android:paddingHorizontal="16dp"/>
