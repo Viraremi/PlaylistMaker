@@ -96,6 +96,22 @@ class FragmentShowPlaylist : Fragment() {
             viewModel.sharePlaylist()
         }
 
+        binding.includedBottomSheetMenu.bottomSheetMenuBtnShare.setOnClickListener {
+            viewModel.sharePlaylist()
+        }
+
+        binding.includedBottomSheetMenu.bottomSheetMenuBtnDelete.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Удалить плейлист")
+                .setMessage("Хотите удалить плейлист ${currentPlaylists.name}?")
+                .setNegativeButton("Нет") { _, _ ->  /* none */ }
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deletePlaylist(currentPlaylists)
+                    closeFragment()
+                }
+                .show()
+        }
+
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -122,6 +138,7 @@ class FragmentShowPlaylist : Fragment() {
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is FragmentShowPlaylistState.CONTENT -> {
+                    currentPlaylists = state.playlist
                     Glide.with(this)
                         .load(state.playlist.imgPath)
                         .placeholder(R.drawable.placeholder_big)
@@ -147,8 +164,13 @@ class FragmentShowPlaylist : Fragment() {
     }
 
     override fun onStart() {
-        super.onStart()
         viewModel.loadContent(currentPlaylists)
+        super.onStart()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun closeFragment(){

@@ -14,6 +14,7 @@ import com.practicum.playlistmaker.sharing.domain.api.InteractorSharing
 import com.practicum.playlistmaker.util.StringFormatter
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -57,8 +58,8 @@ class FragmentShowPlaylistViewModel(
         return StringFormatter.countString(playlist.tracksCount)
     }
 
-    fun deleteTrackFromPlaylist(playlist: Playlist, track: Track) {
-        viewModelScope.launch {
+    fun deleteTrackFromPlaylist(playlist: Playlist, track: Track): Job {
+        val job = viewModelScope.launch {
             val isExistInOther: Deferred<Boolean> = async(Dispatchers.IO) {
                 var flag = false
                 interactorPlaylist.getPlaylists().collect { list ->
@@ -74,6 +75,7 @@ class FragmentShowPlaylistViewModel(
 
             interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
         }
+        return job
     }
 
     var shareMsg = ""
@@ -92,5 +94,26 @@ class FragmentShowPlaylistViewModel(
 
     fun sharePlaylist() {
         interactorSharing.shareApp(shareMsg)
+    }
+
+    fun deletePlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            val tracks: Deferred<List<Track>> = async(Dispatchers.IO) {
+                var result: List<Track> = listOf()
+                interactorPlaylist.getTracksFromPlaylist(playlist).collect { list ->
+                    result = list
+                }
+                return@async result
+            }
+
+            launch {
+                interactorPlaylist.deletePlaylist(playlist)
+            }.join()
+
+            for (item in tracks.await()) {
+                val job = deleteTrackFromPlaylist(playlist, item)
+                job.join()
+            }
+        }
     }
 }
