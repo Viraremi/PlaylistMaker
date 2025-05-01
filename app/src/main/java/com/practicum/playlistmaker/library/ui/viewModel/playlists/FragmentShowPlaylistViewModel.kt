@@ -11,6 +11,9 @@ import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.util.StringFormatter
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class FragmentShowPlaylistViewModel(
@@ -54,7 +57,20 @@ class FragmentShowPlaylistViewModel(
 
     fun deleteTrackFromPlaylist(playlist: Playlist, track: Track) {
         viewModelScope.launch {
-            interactorPlaylist.deleteTrackFromPlaylist(playlist, track)
+            val isExistInOther: Deferred<Boolean> = async(Dispatchers.IO) {
+                var flag = false
+                interactorPlaylist.getPlaylists().collect { list ->
+                    for (item in list) {
+                        if (track.trackId in item.tracksList) {
+                            flag = true
+                            return@collect
+                        }
+                    }
+                }
+                return@async flag
+            }
+
+            interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
             loadContent(playlist)
         }
     }

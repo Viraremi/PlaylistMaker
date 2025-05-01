@@ -8,6 +8,7 @@ import com.practicum.playlistmaker.library.data.db.entity.SavedTracksEntity
 import com.practicum.playlistmaker.library.domain.api.RepositoryPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.search.domain.model.Track
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -60,14 +61,7 @@ class RepositoryPlaylistImpl(
 
     override suspend fun deleteSavedTrack(track: Track) {
         withContext(Dispatchers.IO) {
-            getPlaylists().collect { playlists ->
-                for (item in playlists) {
-                    if (track.trackId in item.tracksList) {
-                        return@collect
-                    }
-                }
-                db.savedTracksDao().deleteSavedTrack(convertorSavedTracks.map(track))
-            }
+            db.savedTracksDao().deleteSavedTrack(convertorSavedTracks.map(track))
         }
     }
 
