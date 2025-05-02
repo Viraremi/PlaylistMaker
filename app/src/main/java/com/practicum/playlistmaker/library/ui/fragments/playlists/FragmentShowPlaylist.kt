@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -91,11 +92,13 @@ class FragmentShowPlaylist : Fragment() {
         }
 
         binding.showPlaylistBtnShare.setOnClickListener {
-            viewModel.sharePlaylist()
+            sharePlaylist()
         }
 
         binding.includedBottomSheetMenu.bottomSheetMenuBtnShare.setOnClickListener {
-            viewModel.sharePlaylist()
+            if (!sharePlaylist()) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
         }
 
         binding.includedBottomSheetMenu.bottomSheetMenuBtnDelete.setOnClickListener {
@@ -193,5 +196,20 @@ class FragmentShowPlaylist : Fragment() {
         adapterList.clear()
         adapterList.addAll(tracks)
         adapter.notifyDataSetChanged()
+    }
+
+    fun sharePlaylist(): Boolean {
+        if (currentPlaylists.tracksCount == 0) {
+            Toast.makeText(
+                requireContext(),
+                "В данном плейлисте нет списка треков, которым можно поделиться",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+        else {
+            viewModel.sharePlaylist()
+            return true
+        }
     }
 }
