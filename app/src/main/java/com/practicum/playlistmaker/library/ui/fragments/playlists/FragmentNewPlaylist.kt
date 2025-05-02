@@ -59,6 +59,7 @@ class FragmentNewPlaylist: Fragment() {
 
     lateinit var currentPlaylist: Playlist
     private var currentImage: Uri? = null
+    private var imageChanged = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,8 +92,8 @@ class FragmentNewPlaylist: Fragment() {
                     binding.addPlaylistHeader.text = "Редактировать"
                     binding.addPlaylistBtnCreate.text = "Сохранить"
 
+                    binding.addPlaylistImage.setImageURI(state.playlist.imgPath.toUri())
                     currentImage = state.playlist.imgPath.toUri()
-                    binding.addPlaylistImage.setImageURI(currentImage)
                     binding.addPlaylistEdittextName.setText(state.playlist.name)
                     binding.addPlaylistEdittextDescription.setText(state.playlist.description)
                 }
@@ -109,15 +110,18 @@ class FragmentNewPlaylist: Fragment() {
 
         binding.addPlaylistImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            if (mode == MODE_EDIT) imageChanged = true
         }
 
         binding.addPlaylistBtnCreate.setOnClickListener {
 
             var image = ""
             val playlistname = binding.addPlaylistEdittextName.text.toString()
-            val filename = playlistname + "_image"
+            val filename = "${playlistname}_${(0..100000).random()}_image"
             if (currentImage != null) {
-                saveImageToPrivateStorage(currentImage!!, "${playlistname}_image")
+                if (mode == MODE_DEFAULT || (imageChanged && mode == MODE_EDIT)){
+                    saveImageToPrivateStorage(currentImage!!, filename)
+                }
                 val filePath = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myplaylists")
                 image = File(filePath, "$filename.jpg").toUri().toString()
             }
@@ -140,11 +144,12 @@ class FragmentNewPlaylist: Fragment() {
                     ).show()
                 }
                 MODE_EDIT -> {
+                    if (imageChanged) File(currentPlaylist.imgPath.toUri().path).delete()
                     viewModel.createOrUpdatePlaylist(
                         Playlist(currentPlaylist.id,
                             playlistname,
                             binding.addPlaylistEdittextDescription.text.toString(),
-                            image,
+                            if (imageChanged) image else currentPlaylist.imgPath,
                             currentPlaylist.tracksList,
                             currentPlaylist.tracksCount
                         )
@@ -211,11 +216,13 @@ class FragmentNewPlaylist: Fragment() {
         if (!filePath.exists()){
             filePath.mkdirs()
         }
-        val file = File(filePath,filename + ".jpg")
+        val file = File(filePath, "$filename.jpg")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        inputStream?.close()
+        outputStream.close()
     }
 }
