@@ -52,7 +52,7 @@ class FragmentShowPlaylistViewModel(
                 FragmentShowPlaylistState.CONTENT(
                     currentPlaylist.await(),
                     tracks.await(),
-                    getCountString(playlist),
+                    getCountString(currentPlaylist.await()),
                     getTimeString(tracks.await())
                 )
             )
@@ -85,6 +85,7 @@ class FragmentShowPlaylistViewModel(
                     var flag = false
                     interactorPlaylist.getPlaylists().collect { list ->
                         for (item in list) {
+                            if (item.id == playlist.id) continue
                             if (track.trackId in item.tracksList) {
                                 flag = true
                                 return@collect
