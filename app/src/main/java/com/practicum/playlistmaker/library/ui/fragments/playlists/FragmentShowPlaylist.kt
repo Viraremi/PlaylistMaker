@@ -53,10 +53,9 @@ class FragmentShowPlaylist : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Удалить трек")
                 .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
-                .setNegativeButton("Отмена") { _, _ ->  /* none */ }
-                .setPositiveButton("Удалить") { _, _ ->
+                .setNegativeButton("Нет") { _, _ ->  /* none */ }
+                .setPositiveButton("Да") { _, _ ->
                     viewModel.deleteTrackFromPlaylist(currentPlaylists, track)
-                    viewModel.loadContent(currentPlaylists)
                 }
                 .show()
         }
@@ -137,7 +136,6 @@ class FragmentShowPlaylist : Fragment() {
         })
 
         currentPlaylists = viewModel.playlistFromJson(arguments?.getString(PLAYLIST_JSON)!!)
-        viewModel.loadContent(currentPlaylists)
 
         binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.adapter = adapter
         binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.layoutManager =
@@ -155,6 +153,7 @@ class FragmentShowPlaylist : Fragment() {
                     binding.showPlaylistDescription.text = state.playlist.description
                     binding.showPlaylistTime.text = state.timeString
                     binding.showPlaylistCount.text = state.countString
+
                     refreshRecycler(state.tracks)
                     viewModel.generateMsg(state.playlist, state.tracks)
 

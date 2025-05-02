@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.ui.viewModel.playlists
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,6 +46,8 @@ class FragmentShowPlaylistViewModel(
                     getTimeString(tracks.await())
                 )
             )
+
+            Log.i("my_info", "data loaded")
         }
     }
 
@@ -66,20 +69,27 @@ class FragmentShowPlaylistViewModel(
 
     fun deleteTrackFromPlaylist(playlist: Playlist, track: Track): Job {
         val job = viewModelScope.launch {
-            val isExistInOther: Deferred<Boolean> = async(Dispatchers.IO) {
-                var flag = false
-                interactorPlaylist.getPlaylists().collect { list ->
-                    for (item in list) {
-                        if (track.trackId in item.tracksList) {
-                            flag = true
-                            return@collect
+            launch {
+                val isExistInOther: Deferred<Boolean> = async(Dispatchers.IO) {
+                    var flag = false
+                    interactorPlaylist.getPlaylists().collect { list ->
+                        for (item in list) {
+                            if (track.trackId in item.tracksList) {
+                                flag = true
+                                return@collect
+                            }
                         }
                     }
+                    return@async flag
                 }
-                return@async flag
-            }
 
-            interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
+                interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
+                Log.i("my_info", "track deleted")
+            }.join()
+
+            launch {
+                loadContent(playlist)
+            }.join()
         }
         return job
     }
@@ -120,6 +130,7 @@ class FragmentShowPlaylistViewModel(
                 val job = deleteTrackFromPlaylist(playlist, item)
                 job.join()
             }
+            Log.i("my_info", "playlist deleted")
         }
     }
 }
