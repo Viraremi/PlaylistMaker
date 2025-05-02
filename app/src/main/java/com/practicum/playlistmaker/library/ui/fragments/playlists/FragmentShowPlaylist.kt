@@ -174,10 +174,6 @@ class FragmentShowPlaylist : Fragment() {
                         .placeholder(R.drawable.placeholder_medium)
                         .into(binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistImg)
                 }
-
-                is FragmentShowPlaylistState.EDIT -> {}
-                FragmentShowPlaylistState.EMPTY -> {}
-                is FragmentShowPlaylistState.HAS_IMAGE -> {}
             }
         }
     }
