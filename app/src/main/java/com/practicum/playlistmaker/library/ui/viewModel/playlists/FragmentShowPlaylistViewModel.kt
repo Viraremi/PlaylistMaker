@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.ui.viewModel.playlists
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
+import com.practicum.playlistmaker.library.ui.model.FragmentNewPlaylistState
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.sharing.domain.api.InteractorSharing
@@ -132,5 +134,28 @@ class FragmentShowPlaylistViewModel(
             }
             Log.i("my_info", "playlist deleted")
         }
+    }
+
+    init {
+        state.postValue(FragmentShowPlaylistState.EMPTY)
+    }
+
+    fun createOrUpdatePlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            val flag: Deferred<Boolean> = async(Dispatchers.IO) {
+                interactorPlaylist.addPlaylist(playlist)
+                Log.i("my_info", "create or update")
+                return@async true
+            }
+            if (flag.await()) loadContent(playlist)
+        }
+    }
+
+    fun setImage(uri: Uri){
+        state.postValue(FragmentShowPlaylistState.HAS_IMAGE(uri))
+    }
+
+    fun toEditMode(playlist: Playlist) {
+        state.postValue(FragmentShowPlaylistState.EDIT(playlist))
     }
 }

@@ -24,7 +24,9 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentNewPlaylistState
+import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
 import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentNewPlaylistViewModel
+import com.practicum.playlistmaker.library.ui.viewModel.playlists.FragmentShowPlaylistViewModel
 import com.practicum.playlistmaker.util.RootActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -46,7 +48,7 @@ class FragmentNewPlaylist: Fragment() {
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<FragmentNewPlaylistViewModel>()
+    private val viewModel by viewModel<FragmentShowPlaylistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,18 +78,18 @@ class FragmentNewPlaylist: Fragment() {
 
         viewModel.getState().observe(viewLifecycleOwner){ state ->
             when (state) {
-                is FragmentNewPlaylistState.HAS_IMAGE -> {
+                is FragmentShowPlaylistState.HAS_IMAGE -> {
                     binding.addPlaylistImage.setImageURI(state.uri)
                     currentImage = state.uri
                 }
-                is FragmentNewPlaylistState.EMPTY -> {
+                is FragmentShowPlaylistState.EMPTY -> {
                     binding.addPlaylistImage.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.add_playlist_placeholder
                     )
                     currentImage = null
                 }
-                is FragmentNewPlaylistState.EDIT -> {
+                is FragmentShowPlaylistState.EDIT -> {
                     mode = MODE_EDIT
                     binding.addPlaylistHeader.text = "Редактировать"
                     binding.addPlaylistBtnCreate.text = "Сохранить"
@@ -97,6 +99,8 @@ class FragmentNewPlaylist: Fragment() {
                     binding.addPlaylistEdittextName.setText(state.playlist.name)
                     binding.addPlaylistEdittextDescription.setText(state.playlist.description)
                 }
+
+                is FragmentShowPlaylistState.CONTENT -> {}
             }
         }
 
@@ -183,7 +187,7 @@ class FragmentNewPlaylist: Fragment() {
     }
 
     private fun closeFragmentWithAlert() {
-        if ((viewModel.getState().value is FragmentNewPlaylistState.HAS_IMAGE
+        if ((viewModel.getState().value is FragmentShowPlaylistState.HAS_IMAGE
             || binding.addPlaylistEdittextName.text.toString().isNotEmpty()
             || binding.addPlaylistEdittextDescription.text.toString().isNotEmpty())
             && mode == MODE_DEFAULT) {
