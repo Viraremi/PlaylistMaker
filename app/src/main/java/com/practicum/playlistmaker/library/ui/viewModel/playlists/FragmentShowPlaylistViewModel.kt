@@ -32,6 +32,7 @@ class FragmentShowPlaylistViewModel(
 
     fun loadContent(playlist: Playlist) {
         viewModelScope.launch {
+            Log.i("my_info", "data loaded start")
             val tracks: Deferred<List<Track>> = async(Dispatchers.IO) {
                 var result = listOf<Track>()
                 interactorPlaylist.getTracksFromPlaylist(playlist).collect { tracks ->
@@ -49,7 +50,7 @@ class FragmentShowPlaylistViewModel(
                 )
             )
 
-            Log.i("my_info", "data loaded")
+            Log.i("my_info", "data loaded end")
         }
     }
 
@@ -72,6 +73,7 @@ class FragmentShowPlaylistViewModel(
     fun deleteTrackFromPlaylist(playlist: Playlist, track: Track): Job {
         val job = viewModelScope.launch {
             launch {
+                Log.i("my_info", "track deleted start")
                 val isExistInOther: Deferred<Boolean> = async(Dispatchers.IO) {
                     var flag = false
                     interactorPlaylist.getPlaylists().collect { list ->
@@ -86,7 +88,7 @@ class FragmentShowPlaylistViewModel(
                 }
 
                 interactorPlaylist.deleteTrackFromPlaylist(playlist, track, isExistInOther.await())
-                Log.i("my_info", "track deleted")
+                Log.i("my_info", "track deleted end")
             }.join()
 
             launch {
@@ -116,6 +118,7 @@ class FragmentShowPlaylistViewModel(
 
     fun deletePlaylist(playlist: Playlist) {
         viewModelScope.launch {
+            Log.i("my_info", "playlist deleted start")
             val tracks: Deferred<List<Track>> = async(Dispatchers.IO) {
                 var result: List<Track> = listOf()
                 interactorPlaylist.getTracksFromPlaylist(playlist).collect { list ->
@@ -132,7 +135,7 @@ class FragmentShowPlaylistViewModel(
                 val job = deleteTrackFromPlaylist(playlist, item)
                 job.join()
             }
-            Log.i("my_info", "playlist deleted")
+            Log.i("my_info", "playlist deleted end")
         }
     }
 
@@ -142,9 +145,10 @@ class FragmentShowPlaylistViewModel(
 
     fun createOrUpdatePlaylist(playlist: Playlist) {
         viewModelScope.launch {
+            Log.i("my_info", "create or update start")
             val flag: Deferred<Boolean> = async(Dispatchers.IO) {
                 interactorPlaylist.addPlaylist(playlist)
-                Log.i("my_info", "create or update")
+                Log.i("my_info", "create or update end")
                 return@async true
             }
             if (flag.await()) loadContent(playlist)
