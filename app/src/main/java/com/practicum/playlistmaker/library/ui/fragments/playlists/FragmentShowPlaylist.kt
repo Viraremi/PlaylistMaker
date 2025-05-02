@@ -160,6 +160,11 @@ class FragmentShowPlaylist : Fragment() {
                     refreshRecycler(state.tracks)
                     viewModel.generateMsg(state.playlist, state.tracks)
 
+                    when (state.tracks.isEmpty()) {
+                        true -> showErrEmpty()
+                        false -> showTracks()
+                    }
+
                     binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistName.text =
                         state.playlist.name
                     binding.includedBottomSheetMenu.includedPlaylistItem.playerPlaylistCount.text =
@@ -211,5 +216,15 @@ class FragmentShowPlaylist : Fragment() {
             viewModel.sharePlaylist()
             return true
         }
+    }
+
+    fun showErrEmpty() {
+        binding.includedBottomSheetTracks.emptyErr.isVisible = true
+        binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.isVisible = false
+    }
+
+    fun showTracks() {
+        binding.includedBottomSheetTracks.emptyErr.isVisible = false
+        binding.includedBottomSheetTracks.bottomSheetTracksListRecycler.isVisible = true
     }
 }
