@@ -33,9 +33,18 @@ class FragmentShowPlaylistViewModel(
     fun loadContent(playlist: Playlist) {
         viewModelScope.launch {
             Log.i("my_info", "data loaded start")
+
+            val currentPlaylist: Deferred<Playlist> = async(Dispatchers.IO) {
+                var result: Playlist? = null
+                interactorPlaylist.getPlaylists().collect { playlists ->
+                    result = playlists.firstOrNull { it.id == playlist.id }
+                }
+                return@async result!!
+            }
+
             val tracks: Deferred<List<Track>> = async(Dispatchers.IO) {
                 var result = listOf<Track>()
-                interactorPlaylist.getTracksFromPlaylist(playlist).collect { tracks ->
+                interactorPlaylist.getTracksFromPlaylist(currentPlaylist.await()).collect { tracks ->
                     result = tracks
                 }
                 return@async result
@@ -43,7 +52,7 @@ class FragmentShowPlaylistViewModel(
 
             state.postValue(
                 FragmentShowPlaylistState.CONTENT(
-                    playlist,
+                    currentPlaylist.await(),
                     tracks.await(),
                     getCountString(playlist),
                     getTimeString(tracks.await())
