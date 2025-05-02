@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.ui.viewModel.playlists
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentShowPlaylistState
@@ -107,11 +109,10 @@ class FragmentShowPlaylistViewModel(
     }
 
     var shareMsg = ""
-
-    fun generateMsg(playlist: Playlist, tracks: List<Track>) {
-
-        shareMsg += "Название: ${playlist.name}\n" +
-                "Описание: ${playlist.description}\n" +
+    fun generateMsg(playlist: Playlist, tracks: List<Track>, context: Context) {
+        shareMsg = ""
+        shareMsg += context.getString(R.string.share_msg_name, playlist.name) +
+                context.getString(R.string.share_msg_description, playlist.description) +
                 "${StringFormatter.countString(playlist.tracksCount)}\n"
 
         tracks.forEachIndexed { index, track ->

@@ -52,10 +52,10 @@ class FragmentShowPlaylist : Fragment() {
         },
         longClick = { track ->
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Удалить трек")
-                .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
-                .setNegativeButton("Нет") { _, _ ->  /* none */ }
-                .setPositiveButton("Да") { _, _ ->
+                .setTitle(requireContext().getString(R.string.delete_alert_title))
+                .setMessage(requireContext().getString(R.string.delete_alert_message))
+                .setNegativeButton(requireContext().getString(R.string.delete_alert_negative)) { _, _ ->  /* none */ }
+                .setPositiveButton(requireContext().getString(R.string.delete_alert_positive)) { _, _ ->
                     viewModel.deleteTrackFromPlaylist(currentPlaylists, track)
                 }
                 .show()
@@ -103,10 +103,10 @@ class FragmentShowPlaylist : Fragment() {
 
         binding.includedBottomSheetMenu.bottomSheetMenuBtnDelete.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Удалить плейлист")
-                .setMessage("Хотите удалить плейлист ${currentPlaylists.name}?")
-                .setNegativeButton("Нет") { _, _ ->  /* none */ }
-                .setPositiveButton("Да") { _, _ ->
+                .setTitle(requireContext().getString(R.string.delete_playlist))
+                .setMessage(requireContext().getString(R.string.delete_playlist_alert_message, currentPlaylists.name))
+                .setNegativeButton(requireContext().getString(R.string.delete_alert_negative)) { _, _ ->  /* none */ }
+                .setPositiveButton(requireContext().getString(R.string.delete_alert_positive)) { _, _ ->
                     viewModel.deletePlaylist(currentPlaylists)
                     closeFragment()
                 }
@@ -158,7 +158,7 @@ class FragmentShowPlaylist : Fragment() {
                     binding.showPlaylistCount.text = state.countString
 
                     refreshRecycler(state.tracks)
-                    viewModel.generateMsg(state.playlist, state.tracks)
+                    viewModel.generateMsg(state.playlist, state.tracks, requireContext())
 
                     when (state.tracks.isEmpty()) {
                         true -> showErrEmpty()
@@ -203,7 +203,7 @@ class FragmentShowPlaylist : Fragment() {
         if (currentPlaylists.tracksCount == 0) {
             Toast.makeText(
                 requireContext(),
-                "В данном плейлисте нет списка треков, которым можно поделиться",
+                requireContext().getString(R.string.no_tracks_for_share),
                 Toast.LENGTH_SHORT
             ).show()
             return false
