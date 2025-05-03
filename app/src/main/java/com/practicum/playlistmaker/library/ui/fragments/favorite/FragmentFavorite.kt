@@ -61,9 +61,11 @@ class FragmentFavorite : Fragment() {
             findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
         }
 
-        favoriteAdapter = TrackAdapter(favoriteList) { track ->
-            onClickDebounce(track)
-        }
+        favoriteAdapter = TrackAdapter(favoriteList, longClick = { /* none */ },
+            click = { track ->
+                onClickDebounce(track)
+            }
+        )
         binding.favoriteRecycler.adapter = favoriteAdapter
         binding.favoriteRecycler.layoutManager = LinearLayoutManager(
             requireContext(),

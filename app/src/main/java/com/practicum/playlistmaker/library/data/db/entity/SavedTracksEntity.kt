@@ -1,6 +1,11 @@
-package com.practicum.playlistmaker.search.domain.model
+package com.practicum.playlistmaker.library.data.db.entity
 
-data class Track(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "saved_tracks")
+data class SavedTracksEntity(
+    @PrimaryKey
     val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
@@ -10,8 +15,5 @@ data class Track(
     val releaseDate: String, // Год релиза
     val primaryGenreName: String, // Жанр
     val country: String, // Страна исполнителя
-    val previewUrl: String, //Ссылка на превью(первые 30 сек) трека
-    var isFavorite: Boolean = false
-){
-    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
-}
+    val previewUrl: String //Ссылка на превью(первые 30 сек) трека
+)

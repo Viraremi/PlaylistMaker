@@ -28,7 +28,7 @@ class RepositoryNetworkRetrofitImpl(
                             it.trackId,
                             it.trackName,
                             it.artistName,
-                            it.trackTimeMillis,
+                            it.trackTimeMillis.toLong(),
                             it.artworkUrl100,
                             it.collectionName,
                             it.releaseDate,

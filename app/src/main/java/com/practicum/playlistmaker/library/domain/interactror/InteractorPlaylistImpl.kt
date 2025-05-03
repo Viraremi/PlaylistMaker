@@ -23,6 +23,22 @@ class InteractorPlaylistImpl(
     }
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        repository.addSavedTrack(track)
         repository.updateTracklist(playlist.id, playlist.tracksList + track.trackId)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(
+        playlist: Playlist,
+        track: Track,
+        isExistInOther: Boolean
+    ) {
+        repository.updateTracklist(playlist.id, playlist.tracksList - track.trackId)
+        if (!isExistInOther) {
+            repository.deleteSavedTrack(track)
+        }
+    }
+
+    override suspend fun getTracksFromPlaylist(playlist: Playlist): Flow<List<Track>> {
+        return repository.getSavedTracks(playlist.tracksList)
     }
 }

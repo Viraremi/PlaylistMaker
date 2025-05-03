@@ -14,7 +14,8 @@ import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.util.StringFormatter
 
 class PlaylistAdapter(
-    private val playlists: List<Playlist>
+    private val playlists: List<Playlist>,
+    private val click: (Playlist) -> Unit
 ) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
@@ -30,6 +31,9 @@ class PlaylistAdapter(
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
+        holder.itemView.setOnClickListener {
+            click(playlists[position])
+        }
     }
 
     class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

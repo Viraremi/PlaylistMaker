@@ -1,16 +1,20 @@
 package com.practicum.playlistmaker.library.ui.viewModel.playlists
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.library.domain.api.InteractorPlaylist
 import com.practicum.playlistmaker.library.domain.model.Playlist
 import com.practicum.playlistmaker.library.ui.model.FragmentNewPlaylistState
 import kotlinx.coroutines.launch
 
 class FragmentNewPlaylistViewModel(
+    val gson: Gson,
     private val interactor: InteractorPlaylist
 ): ViewModel() {
 
@@ -24,10 +28,20 @@ class FragmentNewPlaylistViewModel(
     fun createOrUpdatePlaylist(playlist: Playlist) {
         viewModelScope.launch {
             interactor.addPlaylist(playlist)
+
+            Log.i("my_info", "create or update")
         }
     }
 
     fun setImage(uri: Uri){
         state.postValue(FragmentNewPlaylistState.HAS_IMAGE(uri))
+    }
+
+    fun playlistFromJson(json: String): Playlist {
+        return gson.fromJson(json, object : TypeToken<Playlist>() {}.type)
+    }
+
+    fun toEditMode(playlist: Playlist) {
+        state.postValue(FragmentNewPlaylistState.EDIT(playlist))
     }
 }

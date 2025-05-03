@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.di
 import androidx.room.Room
 import com.practicum.playlistmaker.library.data.db.AppDB
 import com.practicum.playlistmaker.library.data.db.convertors.PlaylistConvertor
+import com.practicum.playlistmaker.library.data.db.convertors.SavedTracksConvertor
 import com.practicum.playlistmaker.library.data.db.convertors.TrackConvertor
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.ITunesNetworkClient
@@ -36,4 +37,6 @@ val dataModule = module {
     factory { TrackConvertor() }
 
     factory { PlaylistConvertor(get()) }
+
+    factory { SavedTracksConvertor() }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_add_to_playlist"
+    style="@style/bottom_sheet_background_tint"
+    android:paddingBottom="50dp"
+    app:behavior_hideable="false"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        style="@style/bottom_sheet_bar"
+        android:layout_width="50dp"
+        android:layout_height="4dp"
+        android:background="@drawable/bottom_sheet_bar"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"/>
+
+    <include
+        android:id="@+id/included_playlist_item"
+        layout="@layout/item_playlist_player"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <TextView
+        style="@style/settings_button_text"
+        android:id="@+id/bottom_sheet_menu_btn_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share_playlist"
+
+        android:paddingVertical="21dp"
+        android:paddingHorizontal="16dp"/>
+
+    <TextView
+        style="@style/settings_button_text"
+        android:id="@+id/bottom_sheet_menu_btn_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_playlist"
+
+        android:paddingVertical="21dp"
+        android:paddingHorizontal="16dp"/>
+
+    <TextView
+        style="@style/settings_button_text"
+        android:id="@+id/bottom_sheet_menu_btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_playlist"
+
+        android:paddingVertical="21dp"
+        android:paddingHorizontal="16dp"/>
+</LinearLayout>
